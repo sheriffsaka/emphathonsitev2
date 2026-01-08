@@ -1,8 +1,7 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { Car } from '../types';
 import { GlassCard } from './GlassCard';
-import { Button } from './Button';
-import { ComponentVariant } from '../types';
 
 interface CarCardProps {
   car: Car;
@@ -10,12 +9,13 @@ interface CarCardProps {
 
 export const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const isPreOrder = car.status === 'Pre-Order';
+  const [imgSrc, setImgSrc] = useState(car.image);
 
   return (
     <GlassCard className="group relative overflow-hidden !p-0 h-full flex flex-col" hoverEffect={true}>
       
       {/* Image Section */}
-      <div className="relative aspect-[16/10] overflow-hidden">
+      <div className="relative aspect-[16/10] overflow-hidden bg-emphathon-navyLight">
         <div className={`absolute top-4 left-4 z-20 px-3 py-1 rounded text-xs font-bold tracking-widest uppercase ${
           isPreOrder ? 'bg-emphathon-rust text-white' : 'bg-white/10 backdrop-blur-md text-white border border-white/20'
         }`}>
@@ -26,8 +26,9 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-emphathon-navy to-transparent opacity-60 z-10" />
         
         <img 
-          src={car.image} 
+          src={imgSrc} 
           alt={`${car.brand} ${car.model}`}
+          onError={() => setImgSrc('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800')} // Reliable Fallback
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
       </div>

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { NAV_ITEMS } from '../constants';
 import { Button } from './Button';
@@ -16,6 +17,16 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <>
       <nav 
@@ -28,11 +39,13 @@ export const Navbar: React.FC = () => {
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between">
           
           {/* Official Logo Lockup */}
-          <div className="flex items-center gap-3 cursor-pointer z-50 relative group">
+          <div 
+            className="flex items-center gap-3 cursor-pointer z-50 relative group"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
             <div className="w-10 h-10 md:w-12 md:h-12 relative flex items-center justify-center">
                <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* Geometric Heart/Shield Outline - Rust */}
-                  {/* Path mimics the V shape with inward folding tops */}
                   <path 
                     d="M20 30 L50 80 L80 30 L65 15 L50 40 L35 15 Z" 
                     stroke="#C85A17" 
@@ -63,6 +76,7 @@ export const Navbar: React.FC = () => {
               <a 
                 key={item.label}
                 href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className="relative group text-sm font-medium tracking-widest uppercase text-slate-300 hover:text-white transition-colors"
               >
                 {item.label}
@@ -101,7 +115,7 @@ export const Navbar: React.FC = () => {
             <a 
               key={item.label}
               href={item.href}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavClick(e, item.href)}
               className="text-2xl font-serif text-white hover:text-emphathon-rust transition-colors transform translate-y-0"
               style={{ transitionDelay: `${idx * 100}ms` }}
             >

@@ -121,5 +121,5 @@ create policy "Public insert corporate" on public.corporate_requests for insert 
 -- SEED DATA (Updated)
 insert into public.cars (brand, model, year, price, mileage, transmission, fuel_type, status, condition, buyer_type, image_url)
 values
-  ('Rolls-Royce', 'Phantom Extended', 2024, 650000, 450, 'Automatic', 'Petrol', 'Available', 'Certified Pre-Owned', ARRAY['Corporate', 'Individual'], 'https://images.unsplash.com/photo-1631295868223-63260951bcb7?auto=format&fit=crop&q=80&w=800'),
-  ('Bentley', 'Continental GT Speed', 2024, 340000, 1200, 'Automatic', 'Petrol', 'Pre-Order', 'New', ARRAY['Individual'], 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&q=80&w=800');
+  ('Rolls-Royce', 'Phantom Extended', 2024, 650000, 450, 'Automatic', 'Petrol', 'Available', 'Certified Pre-Owned', ARRAY['Corporate', 'Individual'], 'https://images.unsplash.com/photo-1633513727954-c8c36293796d?auto=format&fit=crop&q=80&w=800'),
+  ('Bentley', 'Continental GT Speed', 2024, 340000, 1200, 'Automatic', 'Petrol', 'Pre-Order', 'New', ARRAY['Individual'], 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800');

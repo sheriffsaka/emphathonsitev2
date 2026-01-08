@@ -1,3 +1,4 @@
+
 import { ColorSwatch, TypographySample, HeroSlide, NavItem, Car } from './types';
 
 // Extracted from the provided logo description and visual approximation
@@ -62,6 +63,7 @@ export const NAV_ITEMS: NavItem[] = [
   { label: 'Corporate Fleet', href: '#corporate' },
   { label: 'Private Collection', href: '#private' },
   { label: 'Concierge', href: '#concierge' },
+  { label: 'FAQ', href: '#faq' },
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
@@ -103,7 +105,7 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Petrol',
     status: 'Available',
     buyerType: ['Corporate', 'Individual'],
-    image: 'https://images.unsplash.com/photo-1631295868223-63260951bcb7?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1633513727954-c8c36293796d?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c2',
@@ -116,7 +118,7 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Petrol',
     status: 'Pre-Order',
     buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c3',
@@ -129,7 +131,7 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Hybrid',
     status: 'Available',
     buyerType: ['Corporate'],
-    image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c4',
@@ -142,7 +144,7 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Petrol',
     status: 'Pre-Order',
     buyerType: ['Individual', 'Corporate'],
-    image: 'https://images.unsplash.com/photo-1600712243809-7a3dd4e68fff?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c5',
@@ -155,7 +157,7 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Electric',
     status: 'Pre-Order',
     buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1697367375628-87c191cb5287?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1620882806584-c68202d68128?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c6',
@@ -168,6 +170,6 @@ export const MOCK_CARS: Car[] = [
     fuelType: 'Petrol',
     status: 'Available',
     buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1503376763036-066120622c74?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1580274455191-1c62238fa995?auto=format&fit=crop&q=80&w=800'
   }
 ];
