@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
+import { supabase } from '../utils/supabaseClient';
 import { GlassCard } from './GlassCard';
 import { Button } from './Button';
 import { ComponentVariant } from '../types';
 
 export const ReservationForm: React.FC = () => {
   const [buyerType, setBuyerType] = useState<'Corporate' | 'Individual'>('Individual');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   
-  // Form State (Visual handling only for now)
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -20,6 +22,49 @@ export const ReservationForm: React.FC = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    const { error } = await supabase
+      .from('preorders')
+      .insert([
+        {
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          brand: formData.brand,
+          model: formData.model,
+          color: formData.color,
+          expected_delivery: formData.date ? formData.date : null,
+          notes: formData.notes,
+          buyer_type: buyerType
+        }
+      ]);
+
+    setIsSubmitting(false);
+
+    if (error) {
+      console.error('Error submitting reservation:', error);
+      setSubmitStatus('error');
+    } else {
+      setSubmitStatus('success');
+      setFormData({
+        fullName: '',
+        email: '',
+        phone: '',
+        brand: '',
+        model: '',
+        color: '',
+        date: '',
+        notes: ''
+      });
+      // Clear success message after 5 seconds
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    }
   };
 
   const inputClasses = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emphathon-rust focus:ring-1 focus:ring-emphathon-rust transition-all duration-300";
@@ -44,8 +89,20 @@ export const ReservationForm: React.FC = () => {
           </p>
         </div>
 
-        <GlassCard className="max-w-4xl mx-auto backdrop-blur-2xl !p-8 md:!p-12">
-          <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+        <GlassCard className="max-w-4xl mx-auto backdrop-blur-2xl !p-8 md:!p-12 relative overflow-hidden">
+          
+          {submitStatus === 'success' && (
+             <div className="absolute inset-0 z-20 bg-emphathon-navy/95 flex items-center justify-center flex-col animate-in fade-in duration-300">
+                <div className="w-20 h-20 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center mb-6">
+                   <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                </div>
+                <h3 className="text-2xl font-serif text-white mb-2">Request Received</h3>
+                <p className="text-slate-400">Our concierge team will contact you shortly.</p>
+                <button onClick={() => setSubmitStatus('idle')} className="mt-6 text-sm text-emphathon-rust uppercase tracking-widest hover:text-white transition-colors">Make another request</button>
+             </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-8">
             
             {/* Buyer Type Toggle */}
             <div className="flex flex-col items-center justify-center mb-8">
@@ -83,6 +140,7 @@ export const ReservationForm: React.FC = () => {
               <div>
                 <label htmlFor="fullName" className={labelClasses}>Full Name</label>
                 <input 
+                  required
                   type="text" 
                   name="fullName" 
                   id="fullName"
@@ -95,6 +153,7 @@ export const ReservationForm: React.FC = () => {
               <div>
                 <label htmlFor="email" className={labelClasses}>Email Address</label>
                 <input 
+                  required
                   type="email" 
                   name="email" 
                   id="email"
@@ -122,7 +181,7 @@ export const ReservationForm: React.FC = () => {
                   type="date" 
                   name="date" 
                   id="date"
-                  className={`${inputClasses} [color-scheme:dark]`} // Forces calendar icon to be light in some browsers
+                  className={`${inputClasses} [color-scheme:dark]`} 
                   value={formData.date}
                   onChange={handleChange}
                 />
@@ -192,13 +251,16 @@ export const ReservationForm: React.FC = () => {
             </div>
 
             {/* Submit Action */}
-            <div className="flex justify-end pt-4">
+            <div className="flex flex-col items-end pt-4">
               <Button 
+                type="submit"
+                disabled={isSubmitting}
                 variant={ComponentVariant.PRIMARY} 
-                className="w-full md:w-auto !py-4 !px-12 text-lg shadow-xl shadow-emphathon-rust/20 hover:shadow-emphathon-rust/50"
+                className="w-full md:w-auto !py-4 !px-12 text-lg shadow-xl shadow-emphathon-rust/20 hover:shadow-emphathon-rust/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Submit Reservation Request
+                {isSubmitting ? 'Processing...' : 'Submit Reservation Request'}
               </Button>
+              {submitStatus === 'error' && <p className="text-red-400 text-sm mt-2">Failed to submit request. Please try again.</p>}
             </div>
 
           </form>

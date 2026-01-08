@@ -35,7 +35,7 @@ export const HeroSlider: React.FC = () => {
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-emphathon-navy">
-      {/* Background Layer - In a real app, these would be Image or Video tags */}
+      {/* Background Layer */}
       {HERO_SLIDES.map((slide, index) => (
         <div
           key={slide.id}
@@ -43,9 +43,9 @@ export const HeroSlider: React.FC = () => {
             index === currentIndex ? 'opacity-100' : 'opacity-0'
           }`}
           style={{ 
-            background: slide.image,
-            // Fallback for visual noise texture
-            backgroundImage: `${slide.image}, url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E")`
+            backgroundImage: `url(${slide.image})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
           }}
         />
       ))}
@@ -74,10 +74,10 @@ export const HeroSlider: React.FC = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
-            <Button variant={ComponentVariant.PRIMARY}>
+            <Button variant={ComponentVariant.PRIMARY} onClick={() => document.getElementById('showroom')?.scrollIntoView({ behavior: 'smooth' })}>
               {activeSlide.ctaPrimary}
             </Button>
-            <Button variant={ComponentVariant.GLASS}>
+            <Button variant={ComponentVariant.GLASS} onClick={() => document.getElementById('concierge')?.scrollIntoView({ behavior: 'smooth' })}>
               {activeSlide.ctaSecondary}
             </Button>
           </div>

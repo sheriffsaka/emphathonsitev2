@@ -69,7 +69,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 1,
     title: 'The Executive Phantom',
     subtitle: 'Uncompromising silence. Unparalleled presence. The definition of corporate arrival.',
-    image: 'radial-gradient(circle at 70% 50%, #1E2D52 0%, #050912 100%)', 
+    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=2560',
     ctaPrimary: 'Visit Showroom',
     ctaSecondary: 'Reserve Now'
   },
@@ -77,7 +77,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 2,
     title: 'Velocity GT Series',
     subtitle: 'Where geometric precision meets raw adrenaline. Designed for the spirited drive.',
-    image: 'radial-gradient(circle at 30% 60%, #4a1c1c 0%, #050912 100%)',
+    image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=2560',
     ctaPrimary: 'Explore Performance',
     ctaSecondary: 'Pre-Order GT'
   },
@@ -85,7 +85,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 3,
     title: 'Emphathon Estate',
     subtitle: 'A sanctuary of leather and glass. Built for the modern dynasty.',
-    image: 'radial-gradient(circle at 50% 50%, #1a3c3c 0%, #050912 100%)',
+    image: 'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&q=80&w=2560',
     ctaPrimary: 'View Specs',
     ctaSecondary: 'Inquire'
   }
