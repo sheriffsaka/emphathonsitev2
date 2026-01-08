@@ -14,6 +14,15 @@ const MENU_ITEMS = [
 ];
 
 export const AdminSidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+  
+  const handleLogout = () => {
+    if (confirm('Are you sure you want to log out?')) {
+      localStorage.removeItem('emphathon_admin_session');
+      window.location.hash = '';
+      window.location.reload(); // Force reload to clear state in App
+    }
+  };
+
   return (
     <div className="w-64 bg-emphathon-navy/90 backdrop-blur-xl border-r border-white/10 h-screen flex flex-col fixed left-0 top-0 z-50">
       <div className="p-8 flex items-center gap-3">
@@ -49,13 +58,13 @@ export const AdminSidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }
 
       <div className="p-4 border-t border-white/10">
         <button 
-          onClick={() => window.location.hash = ''}
-          className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-white transition-colors"
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:text-red-400 transition-colors"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
-          <span className="text-sm">Exit Portal</span>
+          <span className="text-sm font-medium">Log Out</span>
         </button>
       </div>
     </div>

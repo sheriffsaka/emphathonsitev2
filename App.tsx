@@ -11,23 +11,42 @@ import { ReservationForm } from './components/ReservationForm';
 import { ContactForm, AppointmentBlock } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { AdminDashboard } from './components/admin/AdminDashboard';
+import { AdminLogin } from './components/admin/AdminLogin';
 
 const App: React.FC = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdminRoute, setIsAdminRoute] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simple hash-based router for Admin access
+    // Check for existing session
+    const session = localStorage.getItem('emphathon_admin_session');
+    if (session === 'valid') {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+
+    // Hash-based router check
     const checkHash = () => {
-      setIsAdmin(window.location.hash === '#admin');
+      setIsAdminRoute(window.location.hash === '#admin');
     };
     
-    checkHash(); // Initial check
+    checkHash();
     window.addEventListener('hashchange', checkHash);
-    
     return () => window.removeEventListener('hashchange', checkHash);
   }, []);
 
-  if (isAdmin) {
+  const handleLogin = () => {
+    localStorage.setItem('emphathon_admin_session', 'valid');
+    setIsAuthenticated(true);
+  };
+
+  if (isLoading) return null; // Or a loading spinner
+
+  if (isAdminRoute) {
+    if (!isAuthenticated) {
+      return <AdminLogin onLogin={handleLogin} />;
+    }
     return <AdminDashboard />;
   }
 
@@ -55,9 +74,6 @@ const App: React.FC = () => {
       </main>
 
       <Footer />
-      
-      {/* Secret Admin Trigger for Demo */}
-      <a href="#admin" className="fixed bottom-2 right-2 w-4 h-4 opacity-0 hover:opacity-100 bg-emphathon-rust rounded-full cursor-pointer z-50 transition-opacity" title="Admin Portal"></a>
     </div>
   );
 };

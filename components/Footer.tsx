@@ -53,6 +53,7 @@ export const Footer: React.FC = () => {
               <li><a href="#" className="hover:text-emphathon-rust transition-colors">Contact Support</a></li>
               <li><a href="#" className="hover:text-emphathon-rust transition-colors">Showroom Locations</a></li>
               <li><a href="#" className="hover:text-emphathon-rust transition-colors">Client Portal</a></li>
+              <li><a href="#admin" className="text-emphathon-rust hover:text-white transition-colors font-medium">Admin Portal</a></li>
             </ul>
           </div>
         </div>
