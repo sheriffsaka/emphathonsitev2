@@ -1,0 +1,92 @@
+import { ColorSwatch, TypographySample, HeroSlide, NavItem } from './types';
+
+// Extracted from the provided logo description and visual approximation
+export const BRAND_COLORS: ColorSwatch[] = [
+  {
+    name: 'Emphathon Navy',
+    hex: '#0F1A36',
+    variable: 'bg-emphathon-navy',
+    usage: 'Primary brand background, headers, corporate trust.'
+  },
+  {
+    name: 'Emphathon Rust',
+    hex: '#C85A17',
+    variable: 'bg-emphathon-rust',
+    usage: 'Primary actions, accents, geometric heart logo element.'
+  },
+  {
+    name: 'Luxury Slate',
+    hex: '#1E2D52',
+    variable: 'bg-emphathon-navyLight',
+    usage: 'Secondary backgrounds, card gradients.'
+  },
+  {
+    name: 'Rust Highlight',
+    hex: '#E6722E',
+    variable: 'bg-emphathon-rustLight',
+    usage: 'Hover states for primary actions.'
+  },
+  {
+    name: 'Glass Surface',
+    hex: 'rgba(255,255,255,0.03)',
+    variable: 'bg-emphathon-glass',
+    usage: 'Panels, cards, overlays.'
+  }
+];
+
+export const TYPOGRAPHY_SYSTEM: TypographySample[] = [
+  {
+    name: 'Display Serif',
+    style: 'font-serif text-5xl font-bold',
+    description: 'Used for major luxury headers and impact statements.'
+  },
+  {
+    name: 'Section Heading',
+    style: 'font-sans text-2xl font-semibold tracking-wide',
+    description: 'Standard headers for bento grid sections.'
+  },
+  {
+    name: 'Body Text',
+    style: 'font-sans text-base text-slate-400 font-light',
+    description: 'General content, descriptions, and details.'
+  },
+  {
+    name: 'Micro Label',
+    style: 'font-sans text-xs uppercase tracking-[0.2em] text-emphathon-rust font-bold',
+    description: 'Tags, categories, and technical specs.'
+  }
+];
+
+export const NAV_ITEMS: NavItem[] = [
+  { label: 'Showroom', href: '#showroom' },
+  { label: 'Corporate Fleet', href: '#corporate' },
+  { label: 'Private Collection', href: '#private' },
+  { label: 'Concierge', href: '#concierge' },
+];
+
+export const HERO_SLIDES: HeroSlide[] = [
+  {
+    id: 1,
+    title: 'The Executive Phantom',
+    subtitle: 'Uncompromising silence. Unparalleled presence. The definition of corporate arrival.',
+    image: 'radial-gradient(circle at 70% 50%, #1E2D52 0%, #050912 100%)', 
+    ctaPrimary: 'Visit Showroom',
+    ctaSecondary: 'Reserve Now'
+  },
+  {
+    id: 2,
+    title: 'Velocity GT Series',
+    subtitle: 'Where geometric precision meets raw adrenaline. Designed for the spirited drive.',
+    image: 'radial-gradient(circle at 30% 60%, #4a1c1c 0%, #050912 100%)',
+    ctaPrimary: 'Explore Performance',
+    ctaSecondary: 'Pre-Order GT'
+  },
+  {
+    id: 3,
+    title: 'Emphathon Estate',
+    subtitle: 'A sanctuary of leather and glass. Built for the modern dynasty.',
+    image: 'radial-gradient(circle at 50% 50%, #1a3c3c 0%, #050912 100%)',
+    ctaPrimary: 'View Specs',
+    ctaSecondary: 'Inquire'
+  }
+];
