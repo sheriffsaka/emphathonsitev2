@@ -1,4 +1,4 @@
-import { ColorSwatch, TypographySample, HeroSlide, NavItem } from './types';
+import { ColorSwatch, TypographySample, HeroSlide, NavItem, Car } from './types';
 
 // Extracted from the provided logo description and visual approximation
 export const BRAND_COLORS: ColorSwatch[] = [
@@ -88,5 +88,86 @@ export const HERO_SLIDES: HeroSlide[] = [
     image: 'radial-gradient(circle at 50% 50%, #1a3c3c 0%, #050912 100%)',
     ctaPrimary: 'View Specs',
     ctaSecondary: 'Inquire'
+  }
+];
+
+export const MOCK_CARS: Car[] = [
+  {
+    id: 'c1',
+    brand: 'Rolls-Royce',
+    model: 'Phantom Extended',
+    year: 2024,
+    price: 650000,
+    mileage: 450,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Corporate', 'Individual'],
+    image: 'https://images.unsplash.com/photo-1631295868223-63260951bcb7?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c2',
+    brand: 'Bentley',
+    model: 'Continental GT Speed',
+    year: 2024,
+    price: 340000,
+    mileage: 1200,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Pre-Order',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1621135802920-133df287f89c?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c3',
+    brand: 'Mercedes-Maybach',
+    model: 'S 680 4MATIC',
+    year: 2023,
+    price: 280000,
+    mileage: 3400,
+    transmission: 'Automatic',
+    fuelType: 'Hybrid',
+    status: 'Available',
+    buyerType: ['Corporate'],
+    image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c4',
+    brand: 'Aston Martin',
+    model: 'DBX707',
+    year: 2024,
+    price: 295000,
+    mileage: 50,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Pre-Order',
+    buyerType: ['Individual', 'Corporate'],
+    image: 'https://images.unsplash.com/photo-1600712243809-7a3dd4e68fff?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c5',
+    brand: 'Lucid',
+    model: 'Air Sapphire',
+    year: 2025,
+    price: 249000,
+    mileage: 0,
+    transmission: 'E-Drive',
+    fuelType: 'Electric',
+    status: 'Pre-Order',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1697367375628-87c191cb5287?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c6',
+    brand: 'Porsche',
+    model: '911 GT3 RS',
+    year: 2024,
+    price: 315000,
+    mileage: 850,
+    transmission: 'PDK',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1503376763036-066120622c74?auto=format&fit=crop&q=80&w=800'
   }
 ];

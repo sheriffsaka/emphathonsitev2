@@ -31,3 +31,20 @@ export interface NavItem {
   label: string;
   href: string;
 }
+
+export type CarStatus = 'Available' | 'Reserved' | 'Pre-Order';
+export type BuyerType = 'Corporate' | 'Individual';
+
+export interface Car {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: number;
+  mileage: number;
+  transmission: 'Automatic' | 'Manual' | 'PDK' | 'E-Drive';
+  fuelType: 'Petrol' | 'Hybrid' | 'Electric' | 'Diesel';
+  status: CarStatus;
+  buyerType: BuyerType[];
+  image: string;
+}

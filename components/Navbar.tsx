@@ -21,20 +21,40 @@ export const Navbar: React.FC = () => {
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-white/5 ${
           isScrolled || isMobileMenuOpen
-            ? 'bg-emphathon-navy/80 backdrop-blur-xl py-4 shadow-lg shadow-black/20' 
-            : 'bg-transparent backdrop-blur-sm py-6'
+            ? 'bg-emphathon-navy/80 backdrop-blur-xl py-3 shadow-lg shadow-black/20' 
+            : 'bg-transparent backdrop-blur-sm py-5'
         }`}
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between">
           
-          {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer z-50 relative">
-            <div className="w-8 h-8 md:w-10 md:h-10 border-2 border-emphathon-rust rotate-45 flex items-center justify-center">
-              <div className="w-2 h-2 bg-emphathon-navy rounded-full"></div>
+          {/* Official Logo Lockup */}
+          <div className="flex items-center gap-3 cursor-pointer z-50 relative group">
+            <div className="w-10 h-10 md:w-12 md:h-12 relative flex items-center justify-center">
+               <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Geometric Heart/Shield Outline - Rust */}
+                  {/* Path mimics the V shape with inward folding tops */}
+                  <path 
+                    d="M20 30 L50 80 L80 30 L65 15 L50 40 L35 15 Z" 
+                    stroke="#C85A17" 
+                    strokeWidth="8" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    className="drop-shadow-[0_0_10px_rgba(200,90,23,0.3)]"
+                  />
+                  {/* Dots - Adapted to White for Dark Background visibility */}
+                  <circle cx="35" cy="25" r="5" fill="white" />
+                  <circle cx="65" cy="25" r="5" fill="white" />
+               </svg>
             </div>
-            <span className="font-serif text-xl md:text-2xl font-bold tracking-wider text-white">
-              EMPHATHON
-            </span>
+            
+            <div className="flex flex-col justify-center">
+              <span className="font-sans text-xl md:text-2xl font-bold tracking-wider text-white leading-none">
+                EMPHATHON
+              </span>
+              <span className="font-sans text-[0.6rem] md:text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 mt-1 uppercase">
+                Global Services
+              </span>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
