@@ -87,7 +87,7 @@ export const HERO_SLIDES: HeroSlide[] = [
     id: 3,
     title: 'Emphathon Estate',
     subtitle: 'A sanctuary of leather and glass. Built for the modern dynasty.',
-    image: 'https://images.unsplash.com/photo-1606220588913-b3aacb4d2f46?auto=format&fit=crop&q=80&w=2560',
+    image: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=2560',
     ctaPrimary: 'View Specs',
     ctaSecondary: 'Inquire'
   }

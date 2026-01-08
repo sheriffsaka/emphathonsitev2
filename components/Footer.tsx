@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 export const Footer: React.FC = () => {
@@ -57,7 +58,17 @@ export const Footer: React.FC = () => {
         </div>
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-slate-600">© 2024 Emphathon Global Services. All rights reserved.</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+            <p className="text-xs text-slate-600">© 2024 Emphathon Global Services. All rights reserved.</p>
+            <a 
+              href="https://cloudcraves.com" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs text-slate-600 hover:text-emphathon-rust transition-colors"
+            >
+              Site By: CloudCraves
+            </a>
+          </div>
           <div className="flex gap-6 text-xs text-slate-600">
             <a href="#" className="hover:text-slate-400">Privacy Policy</a>
             <a href="#" className="hover:text-slate-400">Terms of Service</a>
