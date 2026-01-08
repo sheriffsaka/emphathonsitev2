@@ -4,6 +4,9 @@ import { HeroSlider } from './components/HeroSlider';
 import { CarGrid } from './components/CarGrid';
 import { CorporateFleet } from './components/CorporateFleet';
 import { IndividualCTA } from './components/IndividualCTA';
+import { Testimonials } from './components/Testimonials';
+import { FAQ } from './components/FAQ';
+import { ReservationForm } from './components/ReservationForm';
 import { Footer } from './components/Footer';
 
 const App: React.FC = () => {
@@ -16,6 +19,9 @@ const App: React.FC = () => {
         <CarGrid />
         <CorporateFleet />
         <IndividualCTA />
+        <Testimonials />
+        <FAQ />
+        <ReservationForm />
       </main>
 
       <Footer />
