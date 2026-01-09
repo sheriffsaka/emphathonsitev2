@@ -266,4 +266,22 @@ export const ContactForm: React.FC = () => {
                   className={inputClasses} 
                   placeholder="Tell us about your requirements..."
                   value={formData.message}
-                  onChange={handleChange
+                  onChange={handleChange}
+                />
+            </div>
+        </div>
+
+        <div className="flex justify-end pt-4">
+            <Button 
+                type="submit" 
+                disabled={isSubmitting}
+                variant={ComponentVariant.PRIMARY}
+                className="w-full md:w-auto"
+            >
+                {isSubmitting ? 'Scheduling...' : 'Confirm Appointment'}
+            </Button>
+        </div>
+      </form>
+    </GlassCard>
+  );
+};
