@@ -96,9 +96,9 @@ export const CarGrid: React.FC = () => {
           Explore our curated selection of vehicles available for immediate acquisition or future allocation.
         </p>
         {useMockData && (
-          <div className="mt-4 p-3 bg-emphathon-rust/10 border border-emphathon-rust/30 rounded-lg inline-block">
-             <p className="text-emphathon-rust text-xs uppercase tracking-widest font-bold flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emphathon-rust animate-pulse"></span>
+          <div className="mt-4 p-3 bg-empathon-rust/10 border border-empathon-rust/30 rounded-lg inline-block">
+             <p className="text-empathon-rust text-xs uppercase tracking-widest font-bold flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-empathon-rust animate-pulse"></span>
                 Demo Mode: Displaying Sample Inventory
              </p>
           </div>
@@ -134,7 +134,7 @@ export const CarGrid: React.FC = () => {
             <p className="text-slate-400 text-lg">No vehicles found matching your criteria.</p>
             <button 
               onClick={clearFilters}
-              className="mt-4 text-emphathon-rust hover:text-white transition-colors text-sm uppercase tracking-widest font-bold"
+              className="mt-4 text-empathon-rust hover:text-white transition-colors text-sm uppercase tracking-widest font-bold"
             >
               Clear Filters
             </button>

@@ -19,7 +19,7 @@ const FAQ_ITEMS: FAQItem[] = [
     answer: "Vehicles currently in stock can be delivered within 2-4 business days, depending on financing and registration requirements. Custom factory orders or international imports typically range from 3 to 6 months depending on the manufacturer's production schedule."
   },
   {
-    question: "Does Emphathon offer corporate bulk pricing?",
+    question: "Does Empathon offer corporate bulk pricing?",
     answer: "Yes. We offer tiered pricing structures for corporate fleet acquisitions of 3 or more vehicles. This includes priority maintenance scheduling and a dedicated account manager."
   },
   {
@@ -28,7 +28,7 @@ const FAQ_ITEMS: FAQItem[] = [
   },
   {
     question: "Do you handle international shipping/export?",
-    answer: "Emphathon Global Services specializes in cross-border logistics. We can manage the export, customs clearance, and secure transport of your vehicle to your secondary residence or corporate headquarters abroad."
+    answer: "Empathon Global Services specializes in cross-border logistics. We can manage the export, customs clearance, and secure transport of your vehicle to your secondary residence or corporate headquarters abroad."
   },
   {
     question: "What payment methods are accepted?",
@@ -60,7 +60,7 @@ export const FAQ: React.FC = () => {
             <div 
               key={index} 
               className={`border border-white/5 rounded-xl overflow-hidden transition-all duration-300 ${
-                activeIndex === index ? 'bg-white/5 border-emphathon-rust/30' : 'bg-transparent hover:bg-white/5'
+                activeIndex === index ? 'bg-white/5 border-empathon-rust/30' : 'bg-transparent hover:bg-white/5'
               }`}
             >
               <button 
@@ -74,7 +74,7 @@ export const FAQ: React.FC = () => {
                 </span>
                 <span className={`flex-shrink-0 ml-4 w-6 h-6 rounded-full flex items-center justify-center border transition-all duration-300 ${
                   activeIndex === index 
-                    ? 'border-emphathon-rust bg-emphathon-rust text-white rotate-180' 
+                    ? 'border-empathon-rust bg-empathon-rust text-white rotate-180' 
                     : 'border-slate-600 text-slate-400'
                 }`}>
                   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">

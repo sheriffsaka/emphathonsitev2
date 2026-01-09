@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 
 export const Footer: React.FC = () => {
   return (
@@ -24,7 +23,7 @@ export const Footer: React.FC = () => {
                 </div>
                 <div className="flex flex-col">
                   <span className="font-sans text-xl font-bold tracking-wider text-white leading-none">
-                    EMPHATHON
+                    EMPATHON
                   </span>
                   <span className="font-sans text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 mt-1 uppercase">
                     Global Services
@@ -40,32 +39,32 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">Services</h4>
             <ul className="space-y-4 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Corporate Fleet</a></li>
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Private Brokerage</a></li>
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Import/Export</a></li>
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Maintenance Concierge</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Corporate Fleet</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Private Brokerage</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Import/Export</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Maintenance Concierge</a></li>
             </ul>
           </div>
 
           <div>
              <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">Connect</h4>
              <ul className="space-y-4 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Contact Support</a></li>
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Showroom Locations</a></li>
-              <li><a href="#" className="hover:text-emphathon-rust transition-colors">Client Portal</a></li>
-              <li><a href="#admin" className="text-emphathon-rust hover:text-white transition-colors font-medium">Admin Portal</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Contact Support</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Showroom Locations</a></li>
+              <li><a href="#" className="hover:text-empathon-rust transition-colors">Client Portal</a></li>
+              <li><a href="#admin" className="text-empathon-rust hover:text-white transition-colors font-medium">Admin Portal</a></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
-            <p className="text-xs text-slate-600">© 2024 Emphathon Global Services. All rights reserved.</p>
+            <p className="text-xs text-slate-600">© 2024 Empathon Global Services. All rights reserved.</p>
             <a 
               href="https://cloudcraves.com" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-xs text-slate-600 hover:text-emphathon-rust transition-colors"
+              className="text-xs text-slate-600 hover:text-empathon-rust transition-colors"
             >
               Site By: CloudCraves
             </a>

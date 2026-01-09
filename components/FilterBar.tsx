@@ -24,7 +24,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 }) => {
   return (
     <div className="sticky top-[80px] z-30 mb-12">
-      <div className="bg-emphathon-navy/80 backdrop-blur-xl border-y border-white/5 py-4 px-6 shadow-xl">
+      <div className="bg-empathon-navy/80 backdrop-blur-xl border-y border-white/5 py-4 px-6 shadow-xl">
         <div className="max-w-[1920px] mx-auto flex flex-col lg:flex-row gap-6 items-center justify-between">
           
           {/* Left: Buyer Type Toggle */}
@@ -50,7 +50,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               
               {/* Sliding Background */}
               <div 
-                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-emphathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
+                className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-empathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
                   buyerType === 'Individual' ? 'translate-x-[100%] translate-x-2' : 'translate-x-0'
                 }`}
               ></div>
@@ -64,7 +64,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <select 
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 text-white text-sm px-4 py-2 pr-10 rounded-lg focus:outline-none focus:border-emphathon-rust transition-colors cursor-pointer min-w-[160px]"
+                className="appearance-none bg-white/5 border border-white/10 text-white text-sm px-4 py-2 pr-10 rounded-lg focus:outline-none focus:border-empathon-rust transition-colors cursor-pointer min-w-[160px]"
               >
                 <option value="">All Brands</option>
                 <option value="Rolls-Royce">Rolls-Royce</option>
@@ -84,7 +84,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
               <select 
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="appearance-none bg-white/5 border border-white/10 text-white text-sm px-4 py-2 pr-10 rounded-lg focus:outline-none focus:border-emphathon-rust transition-colors cursor-pointer min-w-[160px]"
+                className="appearance-none bg-white/5 border border-white/10 text-white text-sm px-4 py-2 pr-10 rounded-lg focus:outline-none focus:border-empathon-rust transition-colors cursor-pointer min-w-[160px]"
               >
                 <option value="">Any Availability</option>
                 <option value="Available">Available Now</option>
@@ -100,7 +100,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
              <div className="hidden md:flex items-center gap-3 px-4 border-l border-white/10">
                 <span className="text-xs text-slate-500 uppercase">Price</span>
                 <div className="w-32 h-1 bg-white/10 rounded-full relative">
-                  <div className="absolute left-0 w-1/2 h-full bg-emphathon-rust rounded-full"></div>
+                  <div className="absolute left-0 w-1/2 h-full bg-empathon-rust rounded-full"></div>
                   <div className="absolute left-1/2 w-3 h-3 bg-white rounded-full -top-1 shadow-lg cursor-pointer hover:scale-110 transition-transform"></div>
                 </div>
              </div>
@@ -110,7 +110,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           <div className="flex items-center gap-3 w-full lg:w-auto justify-end">
             <label className="flex items-center gap-2 cursor-pointer group">
               <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
-                showPreOrder ? 'bg-emphathon-rust border-emphathon-rust' : 'border-slate-600 bg-transparent group-hover:border-slate-400'
+                showPreOrder ? 'bg-empathon-rust border-empathon-rust' : 'border-slate-600 bg-transparent group-hover:border-slate-400'
               }`}>
                 {showPreOrder && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" /></svg>}
               </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from './Button';
 import { ComponentVariant } from '../types';
 
@@ -9,8 +9,8 @@ export const IndividualCTA: React.FC = () => {
         <div className="relative rounded-3xl overflow-hidden border border-white/10">
           
           {/* Background Image / Texture */}
-          <div className="absolute inset-0 bg-emphathon-navyLight/50">
-             <div className="absolute inset-0 bg-gradient-to-r from-emphathon-navy via-emphathon-navy/80 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-empathon-navyLight/50">
+             <div className="absolute inset-0 bg-gradient-to-r from-empathon-navy via-empathon-navy/80 to-transparent z-10"></div>
               {/* Decorative stripes */}
              <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, #C85A17 10px, #C85A17 11px)' }}></div>
           </div>

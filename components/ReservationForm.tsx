@@ -67,18 +67,18 @@ export const ReservationForm: React.FC = () => {
     }
   };
 
-  const inputClasses = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-emphathon-rust focus:ring-1 focus:ring-emphathon-rust transition-all duration-300";
+  const inputClasses = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-empathon-rust focus:ring-1 focus:ring-empathon-rust transition-all duration-300";
   const labelClasses = "block text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-2";
 
   return (
     <section className="py-24 relative" id="concierge">
       {/* Ambient Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emphathon-navyLight/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-empathon-navyLight/20 rounded-full blur-[100px] pointer-events-none" />
 
       <div className="max-w-[1920px] mx-auto px-6 md:px-12 relative z-10">
         
         <div className="text-center mb-16">
-          <span className="text-emphathon-rust text-xs font-bold tracking-[0.3em] uppercase block mb-4">
+          <span className="text-empathon-rust text-xs font-bold tracking-[0.3em] uppercase block mb-4">
             Concierge Services
           </span>
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">
@@ -92,13 +92,13 @@ export const ReservationForm: React.FC = () => {
         <GlassCard className="max-w-4xl mx-auto backdrop-blur-2xl !p-8 md:!p-12 relative overflow-hidden">
           
           {submitStatus === 'success' && (
-             <div className="absolute inset-0 z-20 bg-emphathon-navy/95 flex items-center justify-center flex-col animate-in fade-in duration-300">
+             <div className="absolute inset-0 z-20 bg-empathon-navy/95 flex items-center justify-center flex-col animate-in fade-in duration-300">
                 <div className="w-20 h-20 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center mb-6">
                    <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <h3 className="text-2xl font-serif text-white mb-2">Request Received</h3>
                 <p className="text-slate-400">Our concierge team will contact you shortly.</p>
-                <button onClick={() => setSubmitStatus('idle')} className="mt-6 text-sm text-emphathon-rust uppercase tracking-widest hover:text-white transition-colors">Make another request</button>
+                <button onClick={() => setSubmitStatus('idle')} className="mt-6 text-sm text-empathon-rust uppercase tracking-widest hover:text-white transition-colors">Make another request</button>
              </div>
           )}
 
@@ -128,7 +128,7 @@ export const ReservationForm: React.FC = () => {
                 </button>
                 {/* Active Pill Background */}
                 <div 
-                  className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-emphathon-rust rounded-lg shadow-lg transition-transform duration-300 ease-out ${
+                  className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-empathon-rust rounded-lg shadow-lg transition-transform duration-300 ease-out ${
                     buyerType === 'Corporate' ? 'translate-x-[100%] translate-x-2' : 'translate-x-0'
                   }`}
                 />
@@ -201,12 +201,12 @@ export const ReservationForm: React.FC = () => {
                       value={formData.brand}
                       onChange={handleChange}
                     >
-                      <option value="" className="bg-emphathon-navy text-slate-400">Select Brand</option>
-                      <option value="Rolls-Royce" className="bg-emphathon-navy text-white">Rolls-Royce</option>
-                      <option value="Bentley" className="bg-emphathon-navy text-white">Bentley</option>
-                      <option value="Porsche" className="bg-emphathon-navy text-white">Porsche</option>
-                      <option value="Aston Martin" className="bg-emphathon-navy text-white">Aston Martin</option>
-                      <option value="Other" className="bg-emphathon-navy text-white">Other</option>
+                      <option value="" className="bg-empathon-navy text-slate-400">Select Brand</option>
+                      <option value="Rolls-Royce" className="bg-empathon-navy text-white">Rolls-Royce</option>
+                      <option value="Bentley" className="bg-empathon-navy text-white">Bentley</option>
+                      <option value="Porsche" className="bg-empathon-navy text-white">Porsche</option>
+                      <option value="Aston Martin" className="bg-empathon-navy text-white">Aston Martin</option>
+                      <option value="Other" className="bg-empathon-navy text-white">Other</option>
                     </select>
                   </div>
                   <div>
@@ -256,7 +256,7 @@ export const ReservationForm: React.FC = () => {
                 type="submit"
                 disabled={isSubmitting}
                 variant={ComponentVariant.PRIMARY} 
-                className="w-full md:w-auto !py-4 !px-12 text-lg shadow-xl shadow-emphathon-rust/20 hover:shadow-emphathon-rust/50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full md:w-auto !py-4 !px-12 text-lg shadow-xl shadow-empathon-rust/20 hover:shadow-empathon-rust/50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? 'Processing...' : 'Submit Reservation Request'}
               </Button>

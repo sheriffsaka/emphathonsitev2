@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { NAV_ITEMS } from '../constants';
 import { Button } from './Button';
@@ -32,7 +31,7 @@ export const Navbar: React.FC = () => {
       <nav 
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b border-white/5 ${
           isScrolled || isMobileMenuOpen
-            ? 'bg-emphathon-navy/80 backdrop-blur-xl py-3 shadow-lg shadow-black/20' 
+            ? 'bg-empathon-navy/80 backdrop-blur-xl py-3 shadow-lg shadow-black/20' 
             : 'bg-transparent backdrop-blur-sm py-5'
         }`}
       >
@@ -62,7 +61,7 @@ export const Navbar: React.FC = () => {
             
             <div className="flex flex-col justify-center">
               <span className="font-sans text-xl md:text-2xl font-bold tracking-wider text-white leading-none">
-                EMPHATHON
+                EMPATHON
               </span>
               <span className="font-sans text-[0.6rem] md:text-[0.65rem] font-bold tracking-[0.2em] text-slate-400 mt-1 uppercase">
                 Global Services
@@ -80,7 +79,7 @@ export const Navbar: React.FC = () => {
                 className="relative group text-sm font-medium tracking-widest uppercase text-slate-300 hover:text-white transition-colors"
               >
                 {item.label}
-                <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-emphathon-rust transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-empathon-rust transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
           </div>
@@ -107,7 +106,7 @@ export const Navbar: React.FC = () => {
       </nav>
 
       {/* Mobile Menu Overlay */}
-      <div className={`fixed inset-0 z-40 bg-emphathon-navy/95 backdrop-blur-2xl transition-all duration-500 lg:hidden ${
+      <div className={`fixed inset-0 z-40 bg-empathon-navy/95 backdrop-blur-2xl transition-all duration-500 lg:hidden ${
         isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
       }`}>
         <div className="h-full flex flex-col justify-center items-center gap-8 p-8">
@@ -116,7 +115,7 @@ export const Navbar: React.FC = () => {
               key={item.label}
               href={item.href}
               onClick={(e) => handleNavClick(e, item.href)}
-              className="text-2xl font-serif text-white hover:text-emphathon-rust transition-colors transform translate-y-0"
+              className="text-2xl font-serif text-white hover:text-empathon-rust transition-colors transform translate-y-0"
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
               {item.label}

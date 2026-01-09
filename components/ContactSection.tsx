@@ -8,7 +8,7 @@ export const AppointmentBlock: React.FC = () => {
   return (
     <div className="flex flex-col h-full gap-6">
       <div className="mb-4">
-        <span className="text-emphathon-rust text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
+        <span className="text-empathon-rust text-xs font-bold tracking-[0.2em] uppercase mb-4 block">
           Visit Us
         </span>
         <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">
@@ -31,7 +31,7 @@ export const AppointmentBlock: React.FC = () => {
         <div className="space-y-8 relative z-10">
           <div>
             <h4 className="text-white font-serif text-xl mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emphathon-rust"></span>
+              <span className="w-2 h-2 rounded-full bg-empathon-rust"></span>
               New York
             </h4>
             <p className="text-slate-400 pl-4 border-l border-white/10 ml-1 py-1">
@@ -42,7 +42,7 @@ export const AppointmentBlock: React.FC = () => {
 
           <div>
              <h4 className="text-white font-serif text-xl mb-2 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emphathon-rust"></span>
+              <span className="w-2 h-2 rounded-full bg-empathon-rust"></span>
               Hours
             </h4>
             <ul className="text-slate-400 pl-4 border-l border-white/10 ml-1 py-1 space-y-1 text-sm">
@@ -64,7 +64,7 @@ export const AppointmentBlock: React.FC = () => {
 
         <div className="mt-10 pt-8 border-t border-white/10 relative z-10">
           <Button variant={ComponentVariant.GHOST} className="!p-0 hover:!bg-transparent group/link">
-            <span className="text-emphathon-rust font-bold tracking-widest uppercase text-xs flex items-center gap-2">
+            <span className="text-empathon-rust font-bold tracking-widest uppercase text-xs flex items-center gap-2">
               Get Directions
               <svg className="w-4 h-4 transform group-hover/link:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -127,15 +127,15 @@ export const ContactForm: React.FC = () => {
     }
   };
 
-  const inputClasses = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-emphathon-rust focus:ring-1 focus:ring-emphathon-rust transition-all duration-300 hover:bg-white/[0.07]";
+  const inputClasses = "w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-empathon-rust focus:ring-1 focus:ring-empathon-rust transition-all duration-300 hover:bg-white/[0.07]";
   const labelClasses = "block text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-2";
 
   return (
-    <GlassCard className="!p-8 md:!p-10 backdrop-blur-xl bg-emphathon-navy/40 relative overflow-hidden">
+    <GlassCard className="!p-8 md:!p-10 backdrop-blur-xl bg-empathon-navy/40 relative overflow-hidden">
       
       {success && (
-        <div className="absolute inset-0 z-20 bg-emphathon-navy/95 flex items-center justify-center flex-col animate-in fade-in">
-           <div className="text-emphathon-rust mb-4">
+        <div className="absolute inset-0 z-20 bg-empathon-navy/95 flex items-center justify-center flex-col animate-in fade-in">
+           <div className="text-empathon-rust mb-4">
               <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
            </div>
            <h3 className="text-2xl font-serif text-white mb-2">Appointment Scheduled</h3>
@@ -170,7 +170,7 @@ export const ContactForm: React.FC = () => {
                     Pre-Order
                   </button>
                   <div 
-                    className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-emphathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
+                    className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-empathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
                         method === 'Pre-Order' ? 'translate-x-[100%] translate-x-2' : 'translate-x-0'
                     }`}
                   />
@@ -200,7 +200,7 @@ export const ContactForm: React.FC = () => {
                     Corporate
                   </button>
                   <div 
-                    className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-emphathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
+                    className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-empathon-rust rounded shadow-lg transition-transform duration-300 ease-out ${
                         buyerType === 'Corporate' ? 'translate-x-[100%] translate-x-2' : 'translate-x-0'
                     }`}
                   />
@@ -266,21 +266,4 @@ export const ContactForm: React.FC = () => {
                   className={inputClasses} 
                   placeholder="Tell us about your requirements..."
                   value={formData.message}
-                  onChange={handleChange}
-                ></textarea>
-            </div>
-        </div>
-
-        <Button 
-          type="submit"
-          disabled={isSubmitting}
-          variant={ComponentVariant.PRIMARY} 
-          className="w-full !py-4 shadow-lg shadow-emphathon-rust/20 hover:shadow-emphathon-rust/50 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Scheduling...' : 'Request Appointment'}
-        </Button>
-
-      </form>
-    </GlassCard>
-  );
-}
+                  onChange={handleChange

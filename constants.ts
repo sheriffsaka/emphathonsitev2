@@ -1,36 +1,35 @@
-
 import { ColorSwatch, TypographySample, HeroSlide, NavItem, Car } from './types';
 
 // Extracted from the provided logo description and visual approximation
 export const BRAND_COLORS: ColorSwatch[] = [
   {
-    name: 'Emphathon Navy',
+    name: 'Empathon Navy',
     hex: '#0F1A36',
-    variable: 'bg-emphathon-navy',
+    variable: 'bg-empathon-navy',
     usage: 'Primary brand background, headers, corporate trust.'
   },
   {
-    name: 'Emphathon Rust',
+    name: 'Empathon Rust',
     hex: '#C85A17',
-    variable: 'bg-emphathon-rust',
+    variable: 'bg-empathon-rust',
     usage: 'Primary actions, accents, geometric heart logo element.'
   },
   {
     name: 'Luxury Slate',
     hex: '#1E2D52',
-    variable: 'bg-emphathon-navyLight',
+    variable: 'bg-empathon-navyLight',
     usage: 'Secondary backgrounds, card gradients.'
   },
   {
     name: 'Rust Highlight',
     hex: '#E6722E',
-    variable: 'bg-emphathon-rustLight',
+    variable: 'bg-empathon-rustLight',
     usage: 'Hover states for primary actions.'
   },
   {
     name: 'Glass Surface',
     hex: 'rgba(255,255,255,0.03)',
-    variable: 'bg-emphathon-glass',
+    variable: 'bg-empathon-glass',
     usage: 'Panels, cards, overlays.'
   }
 ];
@@ -53,7 +52,7 @@ export const TYPOGRAPHY_SYSTEM: TypographySample[] = [
   },
   {
     name: 'Micro Label',
-    style: 'font-sans text-xs uppercase tracking-[0.2em] text-emphathon-rust font-bold',
+    style: 'font-sans text-xs uppercase tracking-[0.2em] text-empathon-rust font-bold',
     description: 'Tags, categories, and technical specs.'
   }
 ];
@@ -85,7 +84,7 @@ export const HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 3,
-    title: 'Emphathon Estate',
+    title: 'Empathon Estate',
     subtitle: 'A sanctuary of leather and glass. Built for the modern dynasty.',
     image: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=2560',
     ctaPrimary: 'View Specs',

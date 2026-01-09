@@ -34,7 +34,7 @@ export const HeroSlider: React.FC = () => {
   const activeSlide = HERO_SLIDES[currentIndex];
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-emphathon-navy">
+    <section className="relative h-screen w-full overflow-hidden bg-empathon-navy">
       {/* Background Layer */}
       {HERO_SLIDES.map((slide, index) => (
         <div
@@ -51,16 +51,16 @@ export const HeroSlider: React.FC = () => {
       ))}
 
       {/* Gradient Overlays for Readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-emphathon-navy via-emphathon-navy/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-emphathon-navy/80 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-empathon-navy via-empathon-navy/40 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-empathon-navy/80 via-transparent to-transparent" />
 
       {/* Content Container */}
       <div className="relative h-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center">
         <div className={`max-w-3xl transition-all duration-1000 transform ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
           
           <div className="flex items-center gap-3 mb-6">
-            <span className="h-px w-12 bg-emphathon-rust"></span>
-            <span className="text-emphathon-rust font-bold tracking-[0.3em] uppercase text-xs">
+            <span className="h-px w-12 bg-empathon-rust"></span>
+            <span className="text-empathon-rust font-bold tracking-[0.3em] uppercase text-xs">
               0{currentIndex + 1} / 0{HERO_SLIDES.length}
             </span>
           </div>
@@ -88,13 +88,13 @@ export const HeroSlider: React.FC = () => {
       <div className="absolute bottom-12 right-6 md:right-12 flex gap-4 z-20">
         <button 
           onClick={prevSlide}
-          className="w-12 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-emphathon-rust hover:border-emphathon-rust transition-all duration-300 text-white"
+          className="w-12 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-empathon-rust hover:border-empathon-rust transition-all duration-300 text-white"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
         </button>
         <button 
           onClick={nextSlide}
-          className="w-12 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-emphathon-rust hover:border-emphathon-rust transition-all duration-300 text-white"
+          className="w-12 h-12 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm flex items-center justify-center hover:bg-empathon-rust hover:border-empathon-rust transition-all duration-300 text-white"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
         </button>
@@ -103,7 +103,7 @@ export const HeroSlider: React.FC = () => {
       {/* Progress Bar */}
       <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
         <div 
-          className="h-full bg-emphathon-rust transition-all duration-500 ease-out"
+          className="h-full bg-empathon-rust transition-all duration-500 ease-out"
           style={{ width: `${((currentIndex + 1) / HERO_SLIDES.length) * 100}%` }}
         ></div>
       </div>

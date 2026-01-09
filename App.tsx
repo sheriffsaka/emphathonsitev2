@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSlider } from './components/HeroSlider';
@@ -20,7 +19,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     // Check for existing session
-    const session = localStorage.getItem('emphathon_admin_session');
+    const session = localStorage.getItem('empathon_admin_session');
     if (session === 'valid') {
       setIsAuthenticated(true);
     }
@@ -37,7 +36,7 @@ const App: React.FC = () => {
   }, []);
 
   const handleLogin = () => {
-    localStorage.setItem('emphathon_admin_session', 'valid');
+    localStorage.setItem('empathon_admin_session', 'valid');
     setIsAuthenticated(true);
   };
 
@@ -51,7 +50,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-emphathon-navy min-h-screen text-white font-sans selection:bg-emphathon-rust selection:text-white overflow-x-hidden">
+    <div className="bg-empathon-navy min-h-screen text-white font-sans selection:bg-empathon-rust selection:text-white overflow-x-hidden">
       <Navbar />
       
       <main>
