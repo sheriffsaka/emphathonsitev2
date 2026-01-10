@@ -120,6 +120,27 @@ create policy "Public insert inquiries" on public.inquiries for insert to anon w
 create policy "Public insert corporate" on public.corporate_requests for insert to anon with check (true);
 
 -- ==========================================
+-- STORAGE BUCKET SETUP
+-- ==========================================
+-- Insert a row into the storage.buckets table
+insert into storage.buckets (id, name, public)
+values ('media', 'media', true)
+on conflict (id) do nothing;
+
+-- Set up storage policies for the 'media' bucket
+create policy "Public Access"
+  on storage.objects for select
+  using ( bucket_id = 'media' );
+
+create policy "Authenticated Upload"
+  on storage.objects for insert
+  with check ( bucket_id = 'media' ); -- Allows anon/public upload for this demo app simplicity
+
+create policy "Authenticated Update"
+  on storage.objects for update
+  with check ( bucket_id = 'media' );
+
+-- ==========================================
 -- SEED DATA 
 -- ==========================================
 

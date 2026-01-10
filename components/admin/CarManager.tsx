@@ -7,7 +7,11 @@ import { ComponentVariant } from '../../types';
 export const CarManager: React.FC = () => {
   const [cars, setCars] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isCreating, setIsCreating] = useState(false);
+  
+  // Create/Edit Mode State
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   
   // Filter State
   const [filters, setFilters] = useState({
@@ -20,7 +24,7 @@ export const CarManager: React.FC = () => {
   });
 
   // Form State
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     brand: 'Mercedes-Benz',
     model: '',
     year: new Date().getFullYear(),
@@ -30,9 +34,12 @@ export const CarManager: React.FC = () => {
     fuel_type: 'Petrol',
     status: 'Available',
     condition: 'Used',
-    buyer_type: ['Individual'], // Default selection
+    buyer_type: ['Individual'], 
     image_url: ''
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const fetchCars = async () => {
     setLoading(true);
@@ -62,7 +69,7 @@ export const CarManager: React.FC = () => {
 
   useEffect(() => {
     fetchCars();
-  }, [filters, isCreating]);
+  }, [filters, isFormOpen]);
 
   const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this vehicle? This action cannot be undone.')) {
@@ -76,37 +83,101 @@ export const CarManager: React.FC = () => {
     }
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleEdit = (car: any) => {
+    setFormData({
+      brand: car.brand,
+      model: car.model,
+      year: car.year,
+      price: car.price,
+      mileage: car.mileage,
+      transmission: car.transmission,
+      fuel_type: car.fuel_type,
+      status: car.status,
+      condition: car.condition,
+      buyer_type: car.buyer_type || [],
+      image_url: car.image_url
+    });
+    setEditingId(car.id);
+    setImageFile(null); // Reset file input
+    setIsFormOpen(true);
+  };
+
+  const uploadImage = async (file: File): Promise<string> => {
+    try {
+      setUploading(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `cars/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data } = supabase.storage.from('media').getPublicUrl(filePath);
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Error uploading image');
+      return '';
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
+    let finalImageUrl = formData.image_url;
+
+    // Handle Image Upload if file selected
+    if (imageFile) {
+      const uploadedUrl = await uploadImage(imageFile);
+      if (uploadedUrl) {
+        finalImageUrl = uploadedUrl;
+      } else {
+        setLoading(false);
+        return; // Stop if upload failed
+      }
+    }
+
     const payload = {
       ...formData,
+      image_url: finalImageUrl,
       price: Number(formData.price),
       mileage: Number(formData.mileage),
       buyer_type: formData.buyer_type
     };
 
-    const { error } = await supabase.from('cars').insert([payload]);
+    let error;
+    
+    if (editingId) {
+      // Update Mode
+      const result = await supabase
+        .from('cars')
+        .update(payload)
+        .eq('id', editingId);
+      error = result.error;
+    } else {
+      // Create Mode
+      const result = await supabase
+        .from('cars')
+        .insert([payload]);
+      error = result.error;
+    }
 
     if (error) {
-      console.error('Error creating car:', error);
-      alert('Failed to add vehicle. Please check the console for details.');
+      console.error('Error saving car:', error);
+      alert('Failed to save vehicle.');
     } else {
-      setIsCreating(false);
-      setFormData({
-        brand: 'Mercedes-Benz',
-        model: '',
-        year: new Date().getFullYear(),
-        price: '',
-        mileage: '',
-        transmission: 'Automatic',
-        fuel_type: 'Petrol',
-        status: 'Available',
-        condition: 'Used',
-        buyer_type: ['Individual'],
-        image_url: ''
-      });
+      setIsFormOpen(false);
+      setFormData(initialFormState);
+      setImageFile(null);
+      setEditingId(null);
       fetchCars();
     }
     setLoading(false);
@@ -127,14 +198,23 @@ export const CarManager: React.FC = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-full">
       
-      {isCreating ? (
+      {isFormOpen ? (
         <div className="w-full bg-white/5 border border-white/10 rounded-2xl p-8 overflow-y-auto">
           <div className="flex justify-between items-center mb-8 border-b border-white/10 pb-4">
-             <h2 className="text-2xl font-serif text-white">Add New Vehicle</h2>
-             <button onClick={() => setIsCreating(false)} className="text-slate-400 hover:text-white transition-colors">Cancel</button>
+             <h2 className="text-2xl font-serif text-white">{editingId ? 'Edit Vehicle' : 'Add New Vehicle'}</h2>
+             <button 
+               onClick={() => {
+                 setIsFormOpen(false);
+                 setEditingId(null);
+                 setFormData(initialFormState);
+               }} 
+               className="text-slate-400 hover:text-white transition-colors"
+             >
+               Cancel
+             </button>
           </div>
 
-          <form onSubmit={handleCreate} className="max-w-4xl mx-auto space-y-6">
+          <form onSubmit={handleSubmit} className="max-w-4xl mx-auto space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className={labelClass}>Brand</label>
@@ -215,14 +295,37 @@ export const CarManager: React.FC = () => {
               </div>
             </div>
 
-            <div>
-               <label className={labelClass}>Image URL</label>
-               <input required type="text" className={inputClass} placeholder="https://images.unsplash.com/..." value={formData.image_url} onChange={e => setFormData({...formData, image_url: e.target.value})} />
-               {formData.image_url && (
-                 <div className="mt-4 h-48 w-full bg-black/40 rounded-lg overflow-hidden border border-white/5">
-                    <img src={formData.image_url} alt="Preview" className="w-full h-full object-contain" />
-                 </div>
-               )}
+            <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+               <label className={labelClass}>Vehicle Image</label>
+               <div className="flex gap-4 items-start">
+                  <div className="flex-1">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      className="block w-full text-sm text-slate-400
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-xs file:font-semibold
+                        file:bg-empathon-rust file:text-white
+                        hover:file:bg-empathon-rustLight"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImageFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                    <p className="text-[10px] text-slate-500 mt-2">Uploading a new file will replace the current image.</p>
+                  </div>
+                  {(imageFile || formData.image_url) && (
+                     <div className="w-24 h-24 rounded-lg bg-black/40 overflow-hidden border border-white/10">
+                        <img 
+                          src={imageFile ? URL.createObjectURL(imageFile) : formData.image_url} 
+                          alt="Preview" 
+                          className="w-full h-full object-cover" 
+                        />
+                     </div>
+                  )}
+               </div>
             </div>
 
             <div>
@@ -240,9 +343,19 @@ export const CarManager: React.FC = () => {
             </div>
 
             <div className="pt-6 border-t border-white/10 flex justify-end gap-4">
-               <button type="button" onClick={() => setIsCreating(false)} className="px-6 py-2 rounded-xl text-slate-400 hover:text-white transition-colors">Cancel</button>
-               <Button type="submit" variant={ComponentVariant.PRIMARY} disabled={loading}>
-                 {loading ? 'Creating...' : 'Add Vehicle'}
+               <button 
+                 type="button" 
+                 onClick={() => {
+                   setIsFormOpen(false);
+                   setEditingId(null);
+                   setFormData(initialFormState);
+                 }} 
+                 className="px-6 py-2 rounded-xl text-slate-400 hover:text-white transition-colors"
+               >
+                 Cancel
+               </button>
+               <Button type="submit" variant={ComponentVariant.PRIMARY} disabled={loading || uploading}>
+                 {loading || uploading ? 'Processing...' : (editingId ? 'Update Vehicle' : 'Add Vehicle')}
                </Button>
             </div>
           </form>
@@ -303,41 +416,6 @@ export const CarManager: React.FC = () => {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                 <div>
-                    <label className="text-[10px] text-slate-500 uppercase block mb-1">Min Price</label>
-                    <input 
-                      type="number" 
-                      placeholder="0"
-                      value={filters.min_price}
-                      onChange={(e) => setFilters({...filters, min_price: e.target.value})}
-                      className="w-full bg-black/20 border border-white/10 rounded-lg px-2 py-2 text-sm text-white"
-                    />
-                 </div>
-                 <div>
-                    <label className="text-[10px] text-slate-500 uppercase block mb-1">Max Price</label>
-                    <input 
-                      type="number" 
-                      placeholder="Max"
-                      value={filters.max_price}
-                      onChange={(e) => setFilters({...filters, max_price: e.target.value})}
-                      className="w-full bg-black/20 border border-white/10 rounded-lg px-2 py-2 text-sm text-white"
-                    />
-                 </div>
-              </div>
-
-              <div className="pt-2">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input 
-                    type="checkbox"
-                    checked={filters.preorder}
-                    onChange={(e) => setFilters({...filters, preorder: e.target.checked})}
-                    className="rounded border-white/20 bg-black/20 text-empathon-rust focus:ring-empathon-rust"
-                  />
-                  <span className="text-sm text-slate-300">Pre-Order Eligible Only</span>
-                </label>
-              </div>
-
               <Button 
                 variant={ComponentVariant.SECONDARY}
                 className="w-full !py-2 !text-xs mt-4"
@@ -352,7 +430,15 @@ export const CarManager: React.FC = () => {
           <div className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 overflow-hidden flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-serif text-white">Vehicle Inventory</h2>
-              <Button variant={ComponentVariant.PRIMARY} onClick={() => setIsCreating(true)} className="!py-2 !px-4 !text-sm flex items-center gap-2">
+              <Button 
+                variant={ComponentVariant.PRIMARY} 
+                onClick={() => {
+                  setFormData(initialFormState);
+                  setEditingId(null);
+                  setIsFormOpen(true);
+                }} 
+                className="!py-2 !px-4 !text-sm flex items-center gap-2"
+              >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                 </svg>
@@ -401,14 +487,18 @@ export const CarManager: React.FC = () => {
                           </span>
                         </td>
                         <td className="py-3 px-4 text-right">
-                           <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                           <div className="flex items-center justify-end gap-2">
+                              <button 
+                                onClick={() => handleEdit(car)}
+                                className="text-xs text-slate-400 hover:text-white px-2 py-1 bg-white/5 hover:bg-white/10 rounded transition-colors"
+                              >
+                                Edit
+                              </button>
                               <button 
                                 onClick={() => handleDelete(car.id)}
-                                className="p-1.5 hover:bg-red-500/10 rounded text-slate-400 hover:text-red-500 transition-colors"
+                                className="text-xs text-red-400 hover:text-red-300 px-2 py-1 bg-white/5 hover:bg-red-500/20 rounded transition-colors"
                               >
-                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
+                                Delete
                               </button>
                            </div>
                         </td>

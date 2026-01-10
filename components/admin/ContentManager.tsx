@@ -8,10 +8,19 @@ export const ContentManager: React.FC = () => {
   const [section, setSection] = useState<'hero' | 'testimonials'>('hero');
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
+  
+  // State for Create/Edit
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
 
   // Form State
-  const [newItem, setNewItem] = useState<any>({});
+  const [formData, setFormData] = useState<any>({});
+  
+  // File states
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [carFile, setCarFile] = useState<File | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -26,9 +35,17 @@ export const ContentManager: React.FC = () => {
 
   useEffect(() => {
     fetchData();
-    setIsCreating(false);
-    setNewItem({});
+    resetForm();
   }, [section]);
+
+  const resetForm = () => {
+    setIsFormOpen(false);
+    setEditingId(null);
+    setFormData({});
+    setHeroFile(null);
+    setAvatarFile(null);
+    setCarFile(null);
+  };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this item?')) return;
@@ -37,36 +54,90 @@ export const ContentManager: React.FC = () => {
     fetchData();
   };
 
-  const handleCreate = async (e: React.FormEvent) => {
+  const handleEdit = (item: any) => {
+    setEditingId(item.id);
+    setFormData(item);
+    setIsFormOpen(true);
+    // Clear files so we don't accidentally re-upload unless changed
+    setHeroFile(null);
+    setAvatarFile(null);
+    setCarFile(null);
+  };
+
+  const uploadFile = async (file: File, folder: string): Promise<string> => {
+    try {
+      setUploading(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${folder}/${Math.random()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage.from('media').getPublicUrl(fileName);
+      return data.publicUrl;
+    } catch (error) {
+      console.error('Upload failed:', error);
+      return '';
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     const table = section === 'hero' ? 'hero_media' : 'testimonials';
     
-    // Default values
-    const payload = section === 'hero' ? {
-       title: newItem.title,
-       subtitle: newItem.subtitle,
-       image_url: newItem.image_url,
-       cta_primary_text: newItem.cta_primary_text || 'View Inventory',
-       cta_secondary_text: newItem.cta_secondary_text || 'Contact Us',
-       display_order: data.length + 1
-    } : {
-       client_name: newItem.client_name,
-       role: newItem.role,
-       content: newItem.content,
-       rating: Number(newItem.rating) || 5,
-       client_type: newItem.client_type || 'Individual',
-       avatar_url: newItem.avatar_url
-    };
+    let payload = { ...formData };
 
-    const { error } = await supabase.from(table).insert([payload]);
+    // Handle Uploads
+    if (section === 'hero') {
+      if (heroFile) {
+        const url = await uploadFile(heroFile, 'hero');
+        if (url) payload.image_url = url;
+      }
+      // Ensure defaults
+      payload.cta_primary_text = payload.cta_primary_text || 'View Inventory';
+      payload.cta_secondary_text = payload.cta_secondary_text || 'Contact Us';
+      if (!editingId) payload.display_order = data.length + 1;
+
+      // Clean up fields that might be from other section state if switching fast
+      delete payload.client_name; delete payload.role; delete payload.content; delete payload.avatar_url; delete payload.car_purchased_image_url;
+    } else {
+      if (avatarFile) {
+        const url = await uploadFile(avatarFile, 'avatars');
+        if (url) payload.avatar_url = url;
+      }
+      if (carFile) {
+        const url = await uploadFile(carFile, 'testimonials');
+        if (url) payload.car_purchased_image_url = url;
+      }
+      payload.rating = Number(payload.rating) || 5;
+      payload.client_type = payload.client_type || 'Individual';
+      
+      delete payload.title; delete payload.subtitle; delete payload.image_url; delete payload.cta_primary_text; delete payload.cta_secondary_text;
+    }
+
+    let error;
+
+    if (editingId) {
+       // Supabase Update
+       const { error: updateError } = await supabase.from(table).update(payload).eq('id', editingId);
+       error = updateError;
+    } else {
+       // Supabase Insert
+       const { error: insertError } = await supabase.from(table).insert([payload]);
+       error = insertError;
+    }
     
     if (!error) {
-      setIsCreating(false);
-      setNewItem({});
+      resetForm();
       fetchData();
     } else {
-      alert('Failed to create item');
+      alert('Failed to save item');
       console.error(error);
     }
     setLoading(false);
@@ -80,56 +151,68 @@ export const ContentManager: React.FC = () => {
       <div className="flex justify-between items-center mb-6">
         <div className="flex bg-black/20 p-1 rounded-lg border border-white/10">
           <button 
-            onClick={() => setSection('hero')}
+            onClick={() => { setSection('hero'); resetForm(); }}
             className={`px-6 py-2 rounded-md text-sm transition-all ${section === 'hero' ? 'bg-empathon-rust text-white shadow' : 'text-slate-400'}`}
           >
             Hero Slides
           </button>
           <button 
-            onClick={() => setSection('testimonials')}
+            onClick={() => { setSection('testimonials'); resetForm(); }}
             className={`px-6 py-2 rounded-md text-sm transition-all ${section === 'testimonials' ? 'bg-empathon-rust text-white shadow' : 'text-slate-400'}`}
           >
             Testimonials
           </button>
         </div>
-        {!isCreating && (
-          <Button variant={ComponentVariant.PRIMARY} className="!py-2 !px-4 !text-sm" onClick={() => setIsCreating(true)}>
+        {!isFormOpen && (
+          <Button variant={ComponentVariant.PRIMARY} className="!py-2 !px-4 !text-sm" onClick={() => setIsFormOpen(true)}>
             Create New {section === 'hero' ? 'Slide' : 'Testimonial'}
           </Button>
         )}
       </div>
 
-      {isCreating ? (
+      {isFormOpen ? (
         <div className="flex-1 overflow-auto">
           <div className="max-w-2xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8">
             <div className="flex justify-between items-center mb-6">
-               <h3 className="text-xl font-serif text-white">Add New {section === 'hero' ? 'Hero Slide' : 'Testimonial'}</h3>
-               <button onClick={() => setIsCreating(false)} className="text-slate-400 hover:text-white">Cancel</button>
+               <h3 className="text-xl font-serif text-white">{editingId ? 'Edit' : 'Add New'} {section === 'hero' ? 'Hero Slide' : 'Testimonial'}</h3>
+               <button onClick={resetForm} className="text-slate-400 hover:text-white">Cancel</button>
             </div>
             
-            <form onSubmit={handleCreate} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {section === 'hero' ? (
                 <>
                   <div>
                     <label className={labelClass}>Title</label>
-                    <input required type="text" className={inputClass} placeholder="e.g. The New GLE 350" value={newItem.title || ''} onChange={e => setNewItem({...newItem, title: e.target.value})} />
+                    <input required type="text" className={inputClass} placeholder="e.g. The New GLE 350" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} />
                   </div>
                   <div>
                     <label className={labelClass}>Subtitle</label>
-                    <textarea required className={inputClass} rows={2} placeholder="Description text..." value={newItem.subtitle || ''} onChange={e => setNewItem({...newItem, subtitle: e.target.value})} />
+                    <textarea required className={inputClass} rows={2} placeholder="Description text..." value={formData.subtitle || ''} onChange={e => setFormData({...formData, subtitle: e.target.value})} />
                   </div>
-                  <div>
-                    <label className={labelClass}>Image URL (Unsplash or direct link)</label>
-                    <input required type="text" className={inputClass} placeholder="https://..." value={newItem.image_url || ''} onChange={e => setNewItem({...newItem, image_url: e.target.value})} />
+                  
+                  <div className="p-4 bg-white/5 rounded-xl border border-white/10">
+                    <label className={labelClass}>Slide Image</label>
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      className="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-empathon-rust file:text-white hover:file:bg-empathon-rustLight"
+                      onChange={(e) => e.target.files && setHeroFile(e.target.files[0])}
+                    />
+                    {(heroFile || formData.image_url) && (
+                      <div className="mt-2 h-24 w-full bg-black/40 rounded overflow-hidden">
+                         <img src={heroFile ? URL.createObjectURL(heroFile) : formData.image_url} className="h-full w-full object-contain" />
+                      </div>
+                    )}
                   </div>
+
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Primary Button Text</label>
-                      <input type="text" className={inputClass} placeholder="View Inventory" value={newItem.cta_primary_text || ''} onChange={e => setNewItem({...newItem, cta_primary_text: e.target.value})} />
+                      <input type="text" className={inputClass} placeholder="View Inventory" value={formData.cta_primary_text || ''} onChange={e => setFormData({...formData, cta_primary_text: e.target.value})} />
                     </div>
                     <div>
                       <label className={labelClass}>Secondary Button Text</label>
-                      <input type="text" className={inputClass} placeholder="Contact Us" value={newItem.cta_secondary_text || ''} onChange={e => setNewItem({...newItem, cta_secondary_text: e.target.value})} />
+                      <input type="text" className={inputClass} placeholder="Contact Us" value={formData.cta_secondary_text || ''} onChange={e => setFormData({...formData, cta_secondary_text: e.target.value})} />
                     </div>
                   </div>
                 </>
@@ -138,11 +221,11 @@ export const ContentManager: React.FC = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className={labelClass}>Client Name</label>
-                      <input required type="text" className={inputClass} placeholder="e.g. John Doe" value={newItem.client_name || ''} onChange={e => setNewItem({...newItem, client_name: e.target.value})} />
+                      <input required type="text" className={inputClass} placeholder="e.g. John Doe" value={formData.client_name || ''} onChange={e => setFormData({...formData, client_name: e.target.value})} />
                     </div>
                     <div>
                       <label className={labelClass}>Client Type</label>
-                      <select className={inputClass} value={newItem.client_type || 'Individual'} onChange={e => setNewItem({...newItem, client_type: e.target.value})}>
+                      <select className={inputClass} value={formData.client_type || 'Individual'} onChange={e => setFormData({...formData, client_type: e.target.value})}>
                          <option value="Individual">Individual</option>
                          <option value="Corporate">Corporate</option>
                       </select>
@@ -150,27 +233,51 @@ export const ContentManager: React.FC = () => {
                   </div>
                   <div>
                     <label className={labelClass}>Role / Title</label>
-                    <input type="text" className={inputClass} placeholder="e.g. CEO of TechCorp" value={newItem.role || ''} onChange={e => setNewItem({...newItem, role: e.target.value})} />
+                    <input type="text" className={inputClass} placeholder="e.g. CEO of TechCorp" value={formData.role || ''} onChange={e => setFormData({...formData, role: e.target.value})} />
                   </div>
                   <div>
                     <label className={labelClass}>Testimonial Content</label>
-                    <textarea required className={inputClass} rows={3} placeholder="Quote..." value={newItem.content || ''} onChange={e => setNewItem({...newItem, content: e.target.value})} />
+                    <textarea required className={inputClass} rows={3} placeholder="Quote..." value={formData.content || ''} onChange={e => setFormData({...formData, content: e.target.value})} />
                   </div>
+                  
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className={labelClass}>Rating (1-5)</label>
-                      <input type="number" min="1" max="5" className={inputClass} value={newItem.rating || 5} onChange={e => setNewItem({...newItem, rating: e.target.value})} />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Avatar URL (Optional)</label>
-                      <input type="text" className={inputClass} placeholder="https://..." value={newItem.avatar_url || ''} onChange={e => setNewItem({...newItem, avatar_url: e.target.value})} />
-                    </div>
+                     <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+                        <label className={labelClass}>Client Avatar</label>
+                        <input 
+                           type="file" accept="image/*"
+                           className="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-empathon-rust file:text-white"
+                           onChange={(e) => e.target.files && setAvatarFile(e.target.files[0])}
+                        />
+                         {(avatarFile || formData.avatar_url) && (
+                           <div className="mt-2 h-16 w-16 rounded-full overflow-hidden bg-black/40">
+                              <img src={avatarFile ? URL.createObjectURL(avatarFile) : formData.avatar_url} className="h-full w-full object-cover" />
+                           </div>
+                        )}
+                     </div>
+                     <div className="p-3 bg-white/5 rounded-xl border border-white/10">
+                        <label className={labelClass}>Purchased Car Img</label>
+                        <input 
+                           type="file" accept="image/*"
+                           className="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-full file:border-0 file:bg-empathon-rust file:text-white"
+                           onChange={(e) => e.target.files && setCarFile(e.target.files[0])}
+                        />
+                         {(carFile || formData.car_purchased_image_url) && (
+                           <div className="mt-2 h-16 w-full rounded overflow-hidden bg-black/40">
+                              <img src={carFile ? URL.createObjectURL(carFile) : formData.car_purchased_image_url} className="h-full w-full object-cover" />
+                           </div>
+                        )}
+                     </div>
+                  </div>
+
+                  <div>
+                    <label className={labelClass}>Rating (1-5)</label>
+                    <input type="number" min="1" max="5" className={inputClass} value={formData.rating || 5} onChange={e => setFormData({...formData, rating: e.target.value})} />
                   </div>
                 </>
               )}
 
-              <Button type="submit" disabled={loading} variant={ComponentVariant.PRIMARY} className="w-full justify-center">
-                {loading ? 'Creating...' : 'Publish Content'}
+              <Button type="submit" disabled={loading || uploading} variant={ComponentVariant.PRIMARY} className="w-full justify-center">
+                {loading || uploading ? 'Processing...' : (editingId ? 'Save Changes' : 'Create')}
               </Button>
             </form>
           </div>
@@ -191,6 +298,7 @@ export const ContentManager: React.FC = () => {
                       <h3 className="text-white font-bold mb-1 truncate">{item.title}</h3>
                       <p className="text-slate-400 text-xs line-clamp-2 mb-4 flex-1">{item.subtitle}</p>
                       <div className="flex justify-end gap-2 pt-2 border-t border-white/5">
+                         <button onClick={() => handleEdit(item)} className="text-xs text-slate-300 hover:text-white px-3 py-1 bg-white/5 rounded transition-colors">Edit</button>
                          <button onClick={() => handleDelete(item.id)} className="text-xs text-red-400 hover:text-red-300 px-3 py-1 bg-white/5 rounded transition-colors">Delete</button>
                       </div>
                     </div>
@@ -209,7 +317,10 @@ export const ContentManager: React.FC = () => {
                     <p className="text-slate-300 text-sm mb-4 flex-1 italic">"{item.content}"</p>
                     <div className="flex items-center justify-between border-t border-white/10 pt-4">
                        <span className="text-empathon-rust text-xs font-bold">{item.rating} Stars</span>
-                       <button onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300 text-xs">Delete</button>
+                       <div className="flex gap-2">
+                          <button onClick={() => handleEdit(item)} className="text-slate-400 hover:text-white text-xs">Edit</button>
+                          <button onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300 text-xs">Delete</button>
+                       </div>
                     </div>
                   </div>
                 )}
