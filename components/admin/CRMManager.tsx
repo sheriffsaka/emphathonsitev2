@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { api } from '../../utils/api';
-import { ComponentVariant } from '../../types';
+import { supabase } from '../../utils/supabaseClient';
 
 interface CRMData {
   appointments: any[];
@@ -17,20 +16,25 @@ export const CRMManager: React.FC = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    const [apps, pre, inq, corp] = await Promise.all([
-      api.get('/appointments'),
-      api.get('/preorders'),
-      api.get('/inquiries'),
-      api.get('/corporate-requests')
-    ]);
-    
-    setData({
-      appointments: apps.success ? apps.data : [],
-      preorders: pre.success ? pre.data : [],
-      inquiries: inq.success ? inq.data : [],
-      corporate: corp.success ? corp.data : []
-    });
-    setLoading(false);
+    try {
+      const [apps, pre, inq, corp] = await Promise.all([
+        supabase.from('appointments').select('*').order('created_at', { ascending: false }),
+        supabase.from('preorders').select('*').order('created_at', { ascending: false }),
+        supabase.from('inquiries').select('*').order('created_at', { ascending: false }),
+        supabase.from('corporate_requests').select('*').order('created_at', { ascending: false })
+      ]);
+      
+      setData({
+        appointments: apps.data || [],
+        preorders: pre.data || [],
+        inquiries: inq.data || [],
+        corporate: corp.data || []
+      });
+    } catch (err) {
+      console.error("Error fetching CRM data", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export const CRMManager: React.FC = () => {
   const renderTable = () => {
     if (loading) return <div className="p-8 text-center text-slate-500">Loading CRM data...</div>;
 
-    let items = [];
+    let items: any[] = [];
     let columns: any[] = [];
     
     switch (activeTab) {
@@ -55,7 +59,7 @@ export const CRMManager: React.FC = () => {
         items = data.appointments;
         columns = [
           { header: 'Name', accessor: (i:any) => i.full_name },
-          { header: 'Date', accessor: (i:any) => i.appointment_date || 'Pending' },
+          { header: 'Date', accessor: (i:any) => i.appointment_date ? new Date(i.appointment_date).toLocaleDateString() : 'Pending' },
           { header: 'Type', accessor: (i:any) => i.visit_type },
           { header: 'Contact', accessor: (i:any) => i.email }
         ];
@@ -109,7 +113,7 @@ export const CRMManager: React.FC = () => {
                   <td key={idx} className="p-4 text-slate-300">{col.accessor(item)}</td>
                 ))}
                 <td className="p-4 text-right">
-                   <button className="text-emphathon-rust hover:text-white transition-colors text-xs font-bold uppercase tracking-wider">
+                   <button className="text-empathon-rust hover:text-white transition-colors text-xs font-bold uppercase tracking-wider">
                       Details
                    </button>
                 </td>
@@ -122,7 +126,7 @@ export const CRMManager: React.FC = () => {
   };
 
   return (
-    <div className="bg-emphathon-navy/50 h-full flex flex-col">
+    <div className="bg-empathon-navy/50 h-full flex flex-col">
       <div className="flex items-center gap-4 mb-6 border-b border-white/10 pb-4">
         {TABS.map(tab => (
           <button
@@ -130,7 +134,7 @@ export const CRMManager: React.FC = () => {
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
               activeTab === tab.id 
-                ? 'bg-emphathon-rust text-white shadow-lg shadow-emphathon-rust/20' 
+                ? 'bg-empathon-rust text-white shadow-lg shadow-empathon-rust/20' 
                 : 'text-slate-400 hover:bg-white/5 hover:text-white'
             }`}
           >

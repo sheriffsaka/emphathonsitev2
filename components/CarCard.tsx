@@ -27,7 +27,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
         <img 
           src={imgSrc} 
           alt={`${car.brand} ${car.model}`}
-          onError={() => setImgSrc('https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800')} // Reliable Fallback
+          onError={() => setImgSrc('https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=800')} // Reliable Fallback
           className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
         />
       </div>
@@ -62,7 +62,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           <div>
             <span className="text-xs text-slate-500 block mb-1">Estimated Price</span>
             <span className="font-serif text-xl md:text-2xl font-bold text-white">
-              ${car.price.toLocaleString()}
+              ₦{car.price.toLocaleString()}
             </span>
           </div>
           <button className="w-10 h-10 rounded-full border border-empathon-rust/50 text-empathon-rust flex items-center justify-center group-hover:bg-empathon-rust group-hover:text-white transition-all duration-300">

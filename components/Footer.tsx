@@ -1,13 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 export const Footer: React.FC = () => {
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <footer className="bg-black/40 border-t border-white/10 pt-16 pb-8">
       <div className="max-w-[1920px] mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
              {/* Logo Lockup */}
-             <div className="flex items-center gap-3 mb-6">
+             <div 
+               className="flex items-center gap-3 mb-6 cursor-pointer group w-fit"
+               onClick={scrollToTop}
+             >
                 <div className="w-10 h-10 relative flex items-center justify-center">
                    <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path 
@@ -22,7 +29,7 @@ export const Footer: React.FC = () => {
                    </svg>
                 </div>
                 <div className="flex flex-col">
-                  <span className="font-sans text-xl font-bold tracking-wider text-white leading-none">
+                  <span className="font-sans text-xl font-bold tracking-wider text-white leading-none group-hover:text-empathon-rust transition-colors">
                     EMPATHON
                   </span>
                   <span className="font-sans text-[0.6rem] font-bold tracking-[0.2em] text-slate-500 mt-1 uppercase">
@@ -39,19 +46,19 @@ export const Footer: React.FC = () => {
           <div>
             <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">Services</h4>
             <ul className="space-y-4 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Corporate Fleet</a></li>
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Private Brokerage</a></li>
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Import/Export</a></li>
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Maintenance Concierge</a></li>
+              <li><a href="#corporate" className="hover:text-empathon-rust transition-colors">Corporate Fleet</a></li>
+              <li><a href="#private" className="hover:text-empathon-rust transition-colors">Private Brokerage</a></li>
+              <li><a href="#corporate" className="hover:text-empathon-rust transition-colors">Import/Export</a></li>
+              <li><a href="#concierge" className="hover:text-empathon-rust transition-colors">Maintenance Concierge</a></li>
             </ul>
           </div>
 
           <div>
              <h4 className="text-white font-bold uppercase tracking-widest text-xs mb-6">Connect</h4>
              <ul className="space-y-4 text-sm text-slate-400">
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Contact Support</a></li>
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Showroom Locations</a></li>
-              <li><a href="#" className="hover:text-empathon-rust transition-colors">Client Portal</a></li>
+              <li><a href="#contact" className="hover:text-empathon-rust transition-colors">Contact Support</a></li>
+              <li><a href="#contact" className="hover:text-empathon-rust transition-colors">Showroom Locations</a></li>
+              <li><a href="#concierge" className="hover:text-empathon-rust transition-colors">Client Portal</a></li>
               <li><a href="#admin" className="text-empathon-rust hover:text-white transition-colors font-medium">Admin Portal</a></li>
             </ul>
           </div>

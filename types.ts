@@ -1,3 +1,4 @@
+
 export interface ColorSwatch {
   name: string;
   hex: string;
@@ -19,7 +20,7 @@ export enum ComponentVariant {
 }
 
 export interface HeroSlide {
-  id: number;
+  id: string | number;
   title: string;
   subtitle: string;
   image: string; // URL or CSS Gradient for now

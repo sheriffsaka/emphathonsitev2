@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabaseClient';
 import { GlassCard } from './GlassCard';
 
 interface Testimonial {
-  id: number;
+  id: string | number;
   name: string;
   role: string;
   type: 'Corporate' | 'Individual';
@@ -12,7 +14,7 @@ interface Testimonial {
   carImage: string;
 }
 
-const TESTIMONIALS: Testimonial[] = [
+const FALLBACK_TESTIMONIALS: Testimonial[] = [
   {
     id: 1,
     name: "Alexander V.",
@@ -46,6 +48,43 @@ const TESTIMONIALS: Testimonial[] = [
 ];
 
 export const Testimonials: React.FC = () => {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchTestimonials = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('testimonials')
+          .select('*')
+          .limit(3);
+
+        if (!error && data && data.length > 0) {
+          const mapped: Testimonial[] = data.map((item: any) => ({
+            id: item.id,
+            name: item.client_name,
+            role: item.role,
+            type: item.client_type,
+            content: item.content,
+            rating: item.rating,
+            image: item.avatar_url,
+            carImage: item.car_purchased_image_url
+          }));
+          setTestimonials(mapped);
+        } else {
+          setTestimonials(FALLBACK_TESTIMONIALS);
+        }
+      } catch (err) {
+        console.error('Error fetching testimonials:', err);
+        setTestimonials(FALLBACK_TESTIMONIALS);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTestimonials();
+  }, []);
+
   return (
     <section className="py-24 relative overflow-hidden" id="testimonials">
       {/* Background Decor */}
@@ -62,7 +101,7 @@ export const Testimonials: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {TESTIMONIALS.map((item) => (
+          {(isLoading ? FALLBACK_TESTIMONIALS : testimonials).map((item) => (
             <GlassCard key={item.id} className="flex flex-col h-full relative group" hoverEffect={true}>
               
               {/* Header: User Info & Badge */}

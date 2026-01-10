@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [isAdminRoute, setIsAdminRoute] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
     // Check for existing session
@@ -32,12 +33,33 @@ const App: React.FC = () => {
     
     checkHash();
     window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
+
+    // Scroll listener for "Back to Top" button
+    const handleScroll = () => {
+      if (window.scrollY > 500) {
+        setShowScrollTop(true);
+      } else {
+        setShowScrollTop(false);
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('hashchange', checkHash);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const handleLogin = () => {
     localStorage.setItem('empathon_admin_session', 'valid');
     setIsAuthenticated(true);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
 
   if (isLoading) return null; // Or a loading spinner
@@ -50,7 +72,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-empathon-navy min-h-screen text-white font-sans selection:bg-empathon-rust selection:text-white overflow-x-hidden">
+    <div className="bg-empathon-navy min-h-screen text-white font-sans selection:bg-empathon-rust selection:text-white overflow-x-hidden relative">
       <Navbar />
       
       <main>
@@ -73,6 +95,18 @@ const App: React.FC = () => {
       </main>
 
       <Footer />
+
+      {/* Scroll to Top Button */}
+      <button 
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 z-40 w-12 h-12 bg-empathon-rust text-white rounded-full shadow-lg shadow-black/30 flex items-center justify-center border border-white/20 transition-all duration-500 transform hover:scale-110 hover:bg-empathon-rustLight ${
+          showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0 pointer-events-none'
+        }`}
+      >
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
+      </button>
     </div>
   );
 };

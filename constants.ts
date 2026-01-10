@@ -68,107 +68,152 @@ export const NAV_ITEMS: NavItem[] = [
 export const HERO_SLIDES: HeroSlide[] = [
   {
     id: 1,
-    title: 'The Executive Phantom',
-    subtitle: 'Uncompromising silence. Unparalleled presence. The definition of corporate arrival.',
-    image: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=2560',
-    ctaPrimary: 'Visit Showroom',
+    title: 'GLE Authority (2020-22)',
+    subtitle: 'The pinnacle of modern luxury. Experience the refined 2020-2022 Mercedes-Benz GLE 350.',
+    image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'View Inventory',
     ctaSecondary: 'Reserve Now'
   },
   {
     id: 2,
-    title: 'Velocity GT Series',
-    subtitle: 'Where geometric precision meets raw adrenaline. Designed for the spirited drive.',
-    image: 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&q=80&w=2560',
-    ctaPrimary: 'Explore Performance',
-    ctaSecondary: 'Pre-Order GT'
+    title: 'Defined by Legacy (2016-19)',
+    subtitle: 'The 2016-2019 Mercedes GLE 350. A testament to enduring performance and style.',
+    image: 'https://images.unsplash.com/photo-1605218427368-35b861280386?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'View Specs',
+    ctaSecondary: 'Inquire'
   },
   {
     id: 3,
-    title: 'Empathon Estate',
-    subtitle: 'A sanctuary of leather and glass. Built for the modern dynasty.',
-    image: 'https://images.unsplash.com/photo-1609521263047-f8f205293f24?auto=format&fit=crop&q=80&w=2560',
-    ctaPrimary: 'View Specs',
+    title: 'The Robust ML350',
+    subtitle: '2012-2015 Mercedes ML350. The classic SUV that defined a generation of corporate transport.',
+    image: 'https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'Check Availability',
+    ctaSecondary: 'Contact'
+  },
+  {
+    id: 4,
+    title: 'Modern Efficiency',
+    subtitle: '2020-2022 Toyota Corolla. Reliability meets contemporary design for the modern fleet.',
+    image: 'https://images.unsplash.com/photo-1623869675781-80e6568f9aa7?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'View Corollas',
+    ctaSecondary: 'Bulk Order'
+  },
+  {
+    id: 5,
+    title: 'Proven Reliability',
+    subtitle: '2014-2016 Toyota Corolla. The cost-effective backbone of executive logistics.',
+    image: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'View Details',
+    ctaSecondary: 'Contact'
+  },
+  {
+    id: 6,
+    title: 'Sonata Executive',
+    subtitle: '2015-2017 Hyundai Sonata. Spacious comfort for the discerning passenger.',
+    image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'Explore Fleet',
     ctaSecondary: 'Inquire'
+  },
+  {
+    id: 7,
+    title: 'Elantra Compact',
+    subtitle: '2012-2016 Hyundai Elantra. Agile, efficient, and ready for urban deployment.',
+    image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=2560',
+    ctaPrimary: 'View Stock',
+    ctaSecondary: 'Contact'
   }
 ];
 
 export const MOCK_CARS: Car[] = [
   {
     id: 'c1',
-    brand: 'Rolls-Royce',
-    model: 'Phantom Extended',
-    year: 2024,
-    price: 650000,
-    mileage: 450,
+    brand: 'Mercedes-Benz',
+    model: 'GLE 350 4MATIC',
+    year: 2021,
+    price: 65000000,
+    mileage: 12000,
     transmission: 'Automatic',
     fuelType: 'Petrol',
     status: 'Available',
     buyerType: ['Corporate', 'Individual'],
-    image: 'https://images.unsplash.com/photo-1633513727954-c8c36293796d?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'c2',
-    brand: 'Bentley',
-    model: 'Continental GT Speed',
-    year: 2024,
-    price: 340000,
-    mileage: 1200,
-    transmission: 'Automatic',
-    fuelType: 'Petrol',
-    status: 'Pre-Order',
-    buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'c3',
-    brand: 'Mercedes-Maybach',
-    model: 'S 680 4MATIC',
-    year: 2023,
-    price: 280000,
-    mileage: 3400,
-    transmission: 'Automatic',
-    fuelType: 'Hybrid',
-    status: 'Available',
-    buyerType: ['Corporate'],
     image: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=800'
   },
   {
+    id: 'c2',
+    brand: 'Mercedes-Benz',
+    model: 'GLE 350',
+    year: 2018,
+    price: 38000000,
+    mileage: 45000,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1605218427368-35b861280386?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c3',
+    brand: 'Mercedes-Benz',
+    model: 'ML 350',
+    year: 2014,
+    price: 18500000,
+    mileage: 85000,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Individual', 'Corporate'],
+    image: 'https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=800'
+  },
+  {
     id: 'c4',
-    brand: 'Aston Martin',
-    model: 'DBX707',
-    year: 2024,
-    price: 295000,
-    mileage: 50,
+    brand: 'Toyota',
+    model: 'Corolla LE',
+    year: 2021,
+    price: 16500000,
+    mileage: 15000,
     transmission: 'Automatic',
     fuelType: 'Petrol',
     status: 'Pre-Order',
     buyerType: ['Individual', 'Corporate'],
-    image: 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1623869675781-80e6568f9aa7?auto=format&fit=crop&q=80&w=800'
   },
   {
     id: 'c5',
-    brand: 'Lucid',
-    model: 'Air Sapphire',
-    year: 2025,
-    price: 249000,
-    mileage: 0,
-    transmission: 'E-Drive',
-    fuelType: 'Electric',
-    status: 'Pre-Order',
-    buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1620882806584-c68202d68128?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'c6',
-    brand: 'Porsche',
-    model: '911 GT3 RS',
-    year: 2024,
-    price: 315000,
-    mileage: 850,
-    transmission: 'PDK',
+    brand: 'Toyota',
+    model: 'Corolla S',
+    year: 2015,
+    price: 9500000,
+    mileage: 92000,
+    transmission: 'Automatic',
     fuelType: 'Petrol',
     status: 'Available',
     buyerType: ['Individual'],
-    image: 'https://images.unsplash.com/photo-1580274455191-1c62238fa995?auto=format&fit=crop&q=80&w=800'
+    image: 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c6',
+    brand: 'Hyundai',
+    model: 'Sonata',
+    year: 2016,
+    price: 8500000,
+    mileage: 78000,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800'
+  },
+  {
+    id: 'c7',
+    brand: 'Hyundai',
+    model: 'Elantra',
+    year: 2014,
+    price: 6500000,
+    mileage: 105000,
+    transmission: 'Automatic',
+    fuelType: 'Petrol',
+    status: 'Available',
+    buyerType: ['Individual'],
+    image: 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=800'
   }
 ];

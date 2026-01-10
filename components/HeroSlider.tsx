@@ -1,42 +1,87 @@
+
 import React, { useState, useEffect } from 'react';
+import { supabase } from '../utils/supabaseClient';
 import { HERO_SLIDES } from '../constants';
 import { Button } from './Button';
-import { ComponentVariant } from '../types';
+import { ComponentVariant, HeroSlide } from '../types';
 
 export const HeroSlider: React.FC = () => {
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Safely determine which slides to render to prevent "0" counts
+  const displaySlides = slides.length > 0 ? slides : HERO_SLIDES;
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('hero_media')
+          .select('*')
+          .order('display_order', { ascending: true });
+
+        if (!error && data && data.length > 0) {
+          const mappedSlides: HeroSlide[] = data.map((item: any) => ({
+            id: item.id,
+            title: item.title,
+            subtitle: item.subtitle,
+            image: item.image_url,
+            ctaPrimary: item.cta_primary_text || 'Learn More',
+            ctaSecondary: item.cta_secondary_text || 'Contact Us'
+          }));
+          setSlides(mappedSlides);
+        } else {
+          setSlides(HERO_SLIDES);
+        }
+      } catch (err) {
+        console.error('Error fetching hero slides:', err);
+        setSlides(HERO_SLIDES);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSlides();
+  }, []);
 
   const nextSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev + 1) % HERO_SLIDES.length);
+      setCurrentIndex((prev) => (prev + 1) % displaySlides.length);
       setIsTransitioning(false);
-    }, 500); // Half of the transition time to switch content
+    }, 500);
   };
 
   const prevSlide = () => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      setCurrentIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+      setCurrentIndex((prev) => (prev - 1 + displaySlides.length) % displaySlides.length);
       setIsTransitioning(false);
     }, 500);
   };
 
   // Auto-advance
   useEffect(() => {
+    if (displaySlides.length <= 1) return;
     const timer = setInterval(nextSlide, 8000);
     return () => clearInterval(timer);
-  }, []);
+  }, [displaySlides.length]);
 
-  const activeSlide = HERO_SLIDES[currentIndex];
+  if (isLoading) {
+    return <div className="h-screen w-full bg-empathon-navy flex items-center justify-center text-white">Loading...</div>;
+  }
+
+  const activeSlide = displaySlides[currentIndex] || HERO_SLIDES[0];
+  const formatNumber = (num: number) => num.toString().padStart(2, '0');
 
   return (
     <section className="relative h-screen w-full overflow-hidden bg-empathon-navy">
       {/* Background Layer */}
-      {HERO_SLIDES.map((slide, index) => (
+      {displaySlides.map((slide, index) => (
         <div
           key={slide.id}
           className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -51,25 +96,25 @@ export const HeroSlider: React.FC = () => {
       ))}
 
       {/* Gradient Overlays for Readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-empathon-navy via-empathon-navy/40 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-r from-empathon-navy/80 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-empathon-navy via-empathon-navy/40 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-empathon-navy/80 via-transparent to-transparent pointer-events-none" />
 
-      {/* Content Container */}
-      <div className="relative h-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center">
+      {/* Content Container - Added z-10 to ensure it sits above backgrounds */}
+      <div className="relative z-10 h-full max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col justify-center">
         <div className={`max-w-3xl transition-all duration-1000 transform ${isTransitioning ? 'opacity-0 translate-y-10' : 'opacity-100 translate-y-0'}`}>
           
           <div className="flex items-center gap-3 mb-6">
             <span className="h-px w-12 bg-empathon-rust"></span>
-            <span className="text-empathon-rust font-bold tracking-[0.3em] uppercase text-xs">
-              0{currentIndex + 1} / 0{HERO_SLIDES.length}
+            <span className="text-empathon-rust font-bold tracking-[0.3em] uppercase text-xs drop-shadow-md">
+              {formatNumber(currentIndex + 1)} / {formatNumber(displaySlides.length)}
             </span>
           </div>
 
-          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1]">
+          <h1 className="font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-[1.1] drop-shadow-lg">
             {activeSlide.title}
           </h1>
           
-          <p className="font-sans text-lg md:text-xl text-slate-300 font-light mb-10 max-w-xl leading-relaxed">
+          <p className="font-sans text-lg md:text-xl text-slate-300 font-light mb-10 max-w-xl leading-relaxed drop-shadow-md">
             {activeSlide.subtitle}
           </p>
 
@@ -101,10 +146,10 @@ export const HeroSlider: React.FC = () => {
       </div>
 
       {/* Progress Bar */}
-      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5">
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 z-20">
         <div 
           className="h-full bg-empathon-rust transition-all duration-500 ease-out"
-          style={{ width: `${((currentIndex + 1) / HERO_SLIDES.length) * 100}%` }}
+          style={{ width: `${((currentIndex + 1) / displaySlides.length) * 100}%` }}
         ></div>
       </div>
     </section>
