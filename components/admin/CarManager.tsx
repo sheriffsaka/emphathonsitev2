@@ -106,22 +106,21 @@ export const CarManager: React.FC = () => {
     try {
       setUploading(true);
       const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `cars/${fileName}`;
+      const fileName = `cars/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(filePath, file);
+        .upload(fileName, file);
 
       if (uploadError) {
         throw uploadError;
       }
 
-      const { data } = supabase.storage.from('media').getPublicUrl(filePath);
+      const { data } = supabase.storage.from('media').getPublicUrl(fileName);
       return data.publicUrl;
     } catch (error) {
       console.error('Error uploading image:', error);
-      alert('Error uploading image');
+      alert('Error uploading image. Check console for details.');
       return '';
     } finally {
       setUploading(false);
@@ -130,6 +129,13 @@ export const CarManager: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validation: Require image for new cars
+    if (!editingId && !imageFile && !formData.image_url) {
+      alert("Please upload a vehicle image.");
+      return;
+    }
+
     setLoading(true);
 
     let finalImageUrl = formData.image_url;
@@ -172,7 +178,7 @@ export const CarManager: React.FC = () => {
 
     if (error) {
       console.error('Error saving car:', error);
-      alert('Failed to save vehicle.');
+      alert(`Failed to save vehicle: ${error.message}`);
     } else {
       setIsFormOpen(false);
       setFormData(initialFormState);
@@ -207,6 +213,7 @@ export const CarManager: React.FC = () => {
                  setIsFormOpen(false);
                  setEditingId(null);
                  setFormData(initialFormState);
+                 setImageFile(null);
                }} 
                className="text-slate-400 hover:text-white transition-colors"
              >
@@ -314,7 +321,9 @@ export const CarManager: React.FC = () => {
                         }
                       }}
                     />
-                    <p className="text-[10px] text-slate-500 mt-2">Uploading a new file will replace the current image.</p>
+                    <p className="text-[10px] text-slate-500 mt-2">
+                       {editingId ? "Upload to replace current image." : "Required."}
+                    </p>
                   </div>
                   {(imageFile || formData.image_url) && (
                      <div className="w-24 h-24 rounded-lg bg-black/40 overflow-hidden border border-white/10">
@@ -349,6 +358,7 @@ export const CarManager: React.FC = () => {
                    setIsFormOpen(false);
                    setEditingId(null);
                    setFormData(initialFormState);
+                   setImageFile(null);
                  }} 
                  className="px-6 py-2 rounded-xl text-slate-400 hover:text-white transition-colors"
                >

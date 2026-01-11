@@ -2,8 +2,12 @@
 -- Enable the necessary extensions
 create extension if not exists "uuid-ossp";
 
--- 1. CARS TABLE
-create table public.cars (
+-- ==========================================
+-- 1. TABLES SETUP
+-- ==========================================
+
+-- CARS TABLE
+create table if not exists public.cars (
   id uuid default uuid_generate_v4() primary key,
   brand text not null,
   model text not null,
@@ -19,8 +23,8 @@ create table public.cars (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 2. PREORDERS TABLE
-create table public.preorders (
+-- PREORDERS TABLE
+create table if not exists public.preorders (
   id uuid default uuid_generate_v4() primary key,
   full_name text not null,
   email text not null,
@@ -34,8 +38,8 @@ create table public.preorders (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 3. APPOINTMENTS TABLE
-create table public.appointments (
+-- APPOINTMENTS TABLE
+create table if not exists public.appointments (
   id uuid default uuid_generate_v4() primary key,
   full_name text not null,
   email text not null,
@@ -47,8 +51,8 @@ create table public.appointments (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 4. HERO_MEDIA TABLE
-create table public.hero_media (
+-- HERO_MEDIA TABLE
+create table if not exists public.hero_media (
   id uuid default uuid_generate_v4() primary key,
   title text not null,
   subtitle text,
@@ -62,8 +66,8 @@ create table public.hero_media (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 5. TESTIMONIALS TABLE
-create table public.testimonials (
+-- TESTIMONIALS TABLE
+create table if not exists public.testimonials (
   id uuid default uuid_generate_v4() primary key,
   client_name text not null,
   role text,
@@ -76,8 +80,8 @@ create table public.testimonials (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 6. INQUIRIES TABLE (General Contact)
-create table public.inquiries (
+-- INQUIRIES TABLE
+create table if not exists public.inquiries (
   id uuid default uuid_generate_v4() primary key,
   name text not null,
   email text not null,
@@ -87,8 +91,8 @@ create table public.inquiries (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- 7. CORPORATE_REQUESTS TABLE (Specific Bulk Fleet Requests)
-create table public.corporate_requests (
+-- CORPORATE_REQUESTS TABLE
+create table if not exists public.corporate_requests (
   id uuid default uuid_generate_v4() primary key,
   company_name text not null,
   contact_person text not null,
@@ -99,7 +103,11 @@ create table public.corporate_requests (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
--- ENABLE ROW LEVEL SECURITY
+-- ==========================================
+-- 2. SECURITY (RLS) POLICIES
+-- ==========================================
+
+-- Enable RLS on all tables
 alter table public.cars enable row level security;
 alter table public.preorders enable row level security;
 alter table public.appointments enable row level security;
@@ -108,70 +116,81 @@ alter table public.testimonials enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.corporate_requests enable row level security;
 
--- GENERIC PUBLIC READ POLICIES
+-- Drop existing policies to prevent conflicts if re-running
+drop policy if exists "Public read cars" on public.cars;
+drop policy if exists "Public insert cars" on public.cars;
+drop policy if exists "Public update cars" on public.cars;
+drop policy if exists "Public delete cars" on public.cars;
+
+drop policy if exists "Public read hero" on public.hero_media;
+drop policy if exists "Public insert hero" on public.hero_media;
+drop policy if exists "Public update hero" on public.hero_media;
+drop policy if exists "Public delete hero" on public.hero_media;
+
+drop policy if exists "Public read testimonials" on public.testimonials;
+drop policy if exists "Public insert testimonials" on public.testimonials;
+drop policy if exists "Public update testimonials" on public.testimonials;
+drop policy if exists "Public delete testimonials" on public.testimonials;
+
+-- READ POLICIES (Public can view content)
 create policy "Public read cars" on public.cars for select to anon using (true);
 create policy "Public read hero" on public.hero_media for select to anon using (true);
 create policy "Public read testimonials" on public.testimonials for select to anon using (true);
 
--- GENERIC PUBLIC INSERT POLICIES
+-- WRITE POLICIES (Allow Admin/Anon to edit content for this demo)
+-- Note: In a real app, 'to anon' should be replaced with 'to authenticated' and check admin roles.
+
+-- Cars
+create policy "Public insert cars" on public.cars for insert to anon with check (true);
+create policy "Public update cars" on public.cars for update to anon using (true);
+create policy "Public delete cars" on public.cars for delete to anon using (true);
+
+-- Hero
+create policy "Public insert hero" on public.hero_media for insert to anon with check (true);
+create policy "Public update hero" on public.hero_media for update to anon using (true);
+create policy "Public delete hero" on public.hero_media for delete to anon using (true);
+
+-- Testimonials
+create policy "Public insert testimonials" on public.testimonials for insert to anon with check (true);
+create policy "Public update testimonials" on public.testimonials for update to anon using (true);
+create policy "Public delete testimonials" on public.testimonials for delete to anon using (true);
+
+-- CRM Data (Insert Only for Public, Read for Admin would need Auth, here we allow all for demo)
 create policy "Public insert preorders" on public.preorders for insert to anon with check (true);
+create policy "Admin read preorders" on public.preorders for select to anon using (true); -- Demo mode: allows fetching on CRM page
+
 create policy "Public insert appointments" on public.appointments for insert to anon with check (true);
+create policy "Admin read appointments" on public.appointments for select to anon using (true);
+
 create policy "Public insert inquiries" on public.inquiries for insert to anon with check (true);
+create policy "Admin read inquiries" on public.inquiries for select to anon using (true);
+
 create policy "Public insert corporate" on public.corporate_requests for insert to anon with check (true);
+create policy "Admin read corporate" on public.corporate_requests for select to anon using (true);
+
 
 -- ==========================================
--- STORAGE BUCKET SETUP
+-- 3. STORAGE BUCKET SETUP
 -- ==========================================
--- Insert a row into the storage.buckets table
 insert into storage.buckets (id, name, public)
 values ('media', 'media', true)
 on conflict (id) do nothing;
 
--- Set up storage policies for the 'media' bucket
+-- Storage Policies
+drop policy if exists "Public Access" on storage.objects;
+drop policy if exists "Public Upload" on storage.objects;
+drop policy if exists "Public Update" on storage.objects;
+
 create policy "Public Access"
   on storage.objects for select
   using ( bucket_id = 'media' );
 
-create policy "Authenticated Upload"
+create policy "Public Upload"
   on storage.objects for insert
-  with check ( bucket_id = 'media' ); -- Allows anon/public upload for this demo app simplicity
-
-create policy "Authenticated Update"
-  on storage.objects for update
+  to anon
   with check ( bucket_id = 'media' );
 
--- ==========================================
--- SEED DATA 
--- ==========================================
-
--- Clean existing data to prevent duplicates if re-running
-TRUNCATE public.cars, public.hero_media, public.testimonials RESTART IDENTITY CASCADE;
-
--- 1. CARS
-INSERT INTO public.cars (brand, model, year, price, mileage, transmission, fuel_type, status, condition, buyer_type, image_url)
-VALUES
-  ('Mercedes-Benz', 'GLE 350 4MATIC', 2021, 65000000, 12000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Corporate', 'Individual'], 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=800'),
-  ('Mercedes-Benz', 'GLE 350', 2018, 38000000, 45000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Individual'], 'https://images.unsplash.com/photo-1605218427368-35b861280386?auto=format&fit=crop&q=80&w=800'),
-  ('Mercedes-Benz', 'ML 350', 2014, 18500000, 85000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Individual', 'Corporate'], 'https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=800'),
-  ('Toyota', 'Corolla LE', 2021, 16500000, 15000, 'Automatic', 'Petrol', 'Pre-Order', 'Certified Pre-Owned', ARRAY['Individual', 'Corporate'], 'https://images.unsplash.com/photo-1623869675781-80e6568f9aa7?auto=format&fit=crop&q=80&w=800'),
-  ('Toyota', 'Corolla S', 2015, 9500000, 92000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Individual'], 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=800'),
-  ('Hyundai', 'Sonata', 2016, 8500000, 78000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Individual'], 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800'),
-  ('Hyundai', 'Elantra', 2014, 6500000, 105000, 'Automatic', 'Petrol', 'Available', 'Used', ARRAY['Individual'], 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=800');
-
--- 2. HERO MEDIA
-INSERT INTO public.hero_media (title, subtitle, image_url, cta_primary_text, cta_secondary_text, display_order)
-VALUES
-  ('GLE Authority (2020-22)', 'The pinnacle of modern luxury. Experience the refined 2020-2022 Mercedes-Benz GLE 350.', 'https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=2560', 'View Inventory', 'Reserve Now', 1),
-  ('Defined by Legacy (2016-19)', 'The 2016-2019 Mercedes GLE 350. A testament to enduring performance and style.', 'https://images.unsplash.com/photo-1605218427368-35b861280386?auto=format&fit=crop&q=80&w=2560', 'View Specs', 'Inquire', 2),
-  ('The Robust ML350', '2012-2015 Mercedes ML350. The classic SUV that defined a generation of corporate transport.', 'https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=2560', 'Check Availability', 'Contact', 3),
-  ('Modern Efficiency', '2020-2022 Toyota Corolla. Reliability meets contemporary design for the modern fleet.', 'https://images.unsplash.com/photo-1623869675781-80e6568f9aa7?auto=format&fit=crop&q=80&w=2560', 'View Corollas', 'Bulk Order', 4),
-  ('Proven Reliability', '2014-2016 Toyota Corolla. The cost-effective backbone of executive logistics.', 'https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&q=80&w=2560', 'View Details', 'Contact', 5),
-  ('Sonata Executive', '2015-2017 Hyundai Sonata. Spacious comfort for the discerning passenger.', 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=2560', 'Explore Fleet', 'Inquire', 6),
-  ('Elantra Compact', '2012-2016 Hyundai Elantra. Agile, efficient, and ready for urban deployment.', 'https://images.unsplash.com/photo-1616422285623-13ff0162193c?auto=format&fit=crop&q=80&w=2560', 'View Stock', 'Contact', 7);
-
--- 3. TESTIMONIALS
-INSERT INTO public.testimonials (client_name, role, client_type, content, rating, avatar_url, car_purchased_image_url)
-VALUES
-  ('Alexander V.', 'Procurement Director, TechCorp', 'Corporate', 'Empathon managed our fleet refresh efficiently. We sourced 5 units of the 2021 Corolla for our sales team. Delivery was prompt.', 5, 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=200', 'https://images.unsplash.com/photo-1623869675781-80e6568f9aa7?auto=format&fit=crop&q=80&w=200'),
-  ('Elena R.', 'Private Buyer', 'Individual', 'I was looking for a clean ML350 for months. Empathon found a 2014 model with low mileage and excellent condition.', 5, 'https://images.unsplash.com/photo-1573496359-1508d476fbfb?auto=format&fit=crop&q=80&w=200', 'https://images.unsplash.com/photo-1606220838315-056192d5e927?auto=format&fit=crop&q=80&w=200'),
-  ('Marcus T.', 'Business Owner', 'Corporate', 'Upgraded my personal vehicle to a 2018 GLE350. The transaction was seamless and handled in Naira without complex FX issues.', 5, 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200', 'https://images.unsplash.com/photo-1553440637-d22ed8a02575?auto=format&fit=crop&q=80&w=200');
+create policy "Public Update"
+  on storage.objects for update
+  to anon
+  using ( bucket_id = 'media' );

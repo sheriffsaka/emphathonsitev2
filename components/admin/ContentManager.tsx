@@ -68,7 +68,7 @@ export const ContentManager: React.FC = () => {
     try {
       setUploading(true);
       const fileExt = file.name.split('.').pop();
-      const fileName = `${folder}/${Math.random()}.${fileExt}`;
+      const fileName = `${folder}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
@@ -80,6 +80,7 @@ export const ContentManager: React.FC = () => {
       return data.publicUrl;
     } catch (error) {
       console.error('Upload failed:', error);
+      alert(`Image upload failed: ${error}`);
       return '';
     } finally {
       setUploading(false);
@@ -88,6 +89,13 @@ export const ContentManager: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // VALIDATION: Ensure image is present for new Hero items
+    if (section === 'hero' && !editingId && !heroFile && !formData.image_url) {
+      alert("Please upload a slide image to continue.");
+      return;
+    }
+
     setLoading(true);
     const table = section === 'hero' ? 'hero_media' : 'testimonials';
     
@@ -98,13 +106,17 @@ export const ContentManager: React.FC = () => {
       if (heroFile) {
         const url = await uploadFile(heroFile, 'hero');
         if (url) payload.image_url = url;
+        else {
+           setLoading(false);
+           return; // Upload failed
+        }
       }
       // Ensure defaults
       payload.cta_primary_text = payload.cta_primary_text || 'View Inventory';
       payload.cta_secondary_text = payload.cta_secondary_text || 'Contact Us';
       if (!editingId) payload.display_order = data.length + 1;
 
-      // Clean up fields that might be from other section state if switching fast
+      // Clean up fields from other section
       delete payload.client_name; delete payload.role; delete payload.content; delete payload.avatar_url; delete payload.car_purchased_image_url;
     } else {
       if (avatarFile) {
@@ -137,7 +149,7 @@ export const ContentManager: React.FC = () => {
       resetForm();
       fetchData();
     } else {
-      alert('Failed to save item');
+      alert(`Failed to save item: ${error.message}`);
       console.error(error);
     }
     setLoading(false);
@@ -191,7 +203,7 @@ export const ContentManager: React.FC = () => {
                   </div>
                   
                   <div className="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <label className={labelClass}>Slide Image</label>
+                    <label className={labelClass}>Slide Image {(!editingId && !formData.image_url) && <span className="text-empathon-rust">*</span>}</label>
                     <input 
                       type="file" 
                       accept="image/*"
@@ -199,7 +211,7 @@ export const ContentManager: React.FC = () => {
                       onChange={(e) => e.target.files && setHeroFile(e.target.files[0])}
                     />
                     {(heroFile || formData.image_url) && (
-                      <div className="mt-2 h-24 w-full bg-black/40 rounded overflow-hidden">
+                      <div className="mt-2 h-24 w-full bg-black/40 rounded overflow-hidden relative">
                          <img src={heroFile ? URL.createObjectURL(heroFile) : formData.image_url} className="h-full w-full object-contain" />
                       </div>
                     )}
