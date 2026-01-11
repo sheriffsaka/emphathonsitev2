@@ -160,7 +160,7 @@ export const ContentManager: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 shrink-0">
         <div className="flex bg-black/20 p-1 rounded-lg border border-white/10">
           <button 
             onClick={() => { setSection('hero'); resetForm(); }}
@@ -183,7 +183,7 @@ export const ContentManager: React.FC = () => {
       </div>
 
       {isFormOpen ? (
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto min-h-0">
           <div className="max-w-2xl mx-auto bg-white/5 border border-white/10 rounded-2xl p-8">
             <div className="flex justify-between items-center mb-6">
                <h3 className="text-xl font-serif text-white">{editingId ? 'Edit' : 'Add New'} {section === 'hero' ? 'Hero Slide' : 'Testimonial'}</h3>
@@ -295,50 +295,53 @@ export const ContentManager: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 overflow-auto pb-8 flex-1">
-          {loading ? (
-            <div className="col-span-3 text-center text-slate-500 py-12">Loading content...</div>
-          ) : (
-            data.map((item: any) => (
-              <div key={item.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden group hover:border-empathon-rust/50 transition-colors flex flex-col">
-                {section === 'hero' ? (
-                  <>
-                    <div className="h-40 bg-black/40 relative shrink-0">
-                      <img src={item.image_url} alt={item.title} className="w-full h-full object-cover opacity-80" />
-                    </div>
-                    <div className="p-4 flex flex-col flex-1">
-                      <h3 className="text-white font-bold mb-1 truncate">{item.title}</h3>
-                      <p className="text-slate-400 text-xs line-clamp-2 mb-4 flex-1">{item.subtitle}</p>
-                      <div className="flex justify-end gap-2 pt-2 border-t border-white/5">
-                         <button onClick={() => handleEdit(item)} className="text-xs text-slate-300 hover:text-white px-3 py-1 bg-white/5 rounded transition-colors">Edit</button>
-                         <button onClick={() => handleDelete(item.id)} className="text-xs text-red-400 hover:text-red-300 px-3 py-1 bg-white/5 rounded transition-colors">Delete</button>
+        /* FIX: Separated scroll container from grid to ensure padding is respected and buttons aren't cut off */
+        <div className="flex-1 overflow-y-auto min-h-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-24">
+            {loading ? (
+              <div className="col-span-3 text-center text-slate-500 py-12">Loading content...</div>
+            ) : (
+              data.map((item: any) => (
+                <div key={item.id} className="bg-white/5 border border-white/10 rounded-xl overflow-hidden group hover:border-empathon-rust/50 transition-colors flex flex-col h-full">
+                  {section === 'hero' ? (
+                    <>
+                      <div className="h-40 bg-black/40 relative shrink-0">
+                        <img src={item.image_url} alt={item.title} className="w-full h-full object-cover opacity-80" />
+                      </div>
+                      <div className="p-4 flex flex-col flex-1">
+                        <h3 className="text-white font-bold mb-1 truncate">{item.title}</h3>
+                        <p className="text-slate-400 text-xs line-clamp-2 mb-4 flex-1">{item.subtitle}</p>
+                        <div className="flex justify-end gap-2 pt-2 border-t border-white/5 shrink-0">
+                           <button onClick={() => handleEdit(item)} className="text-xs text-slate-300 hover:text-white px-3 py-1 bg-white/5 rounded transition-colors hover:bg-white/10">Edit</button>
+                           <button onClick={() => handleDelete(item.id)} className="text-xs text-red-400 hover:text-red-300 px-3 py-1 bg-white/5 rounded transition-colors hover:bg-red-500/20">Delete</button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="p-6 flex flex-col h-full">
+                      <div className="flex items-center gap-3 mb-4 shrink-0">
+                        <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
+                           {item.avatar_url ? <img src={item.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-slate-700"></div>}
+                        </div>
+                        <div>
+                          <h4 className="text-white font-bold text-sm">{item.client_name}</h4>
+                          <p className="text-slate-500 text-xs">{item.role}</p>
+                        </div>
+                      </div>
+                      <p className="text-slate-300 text-sm mb-4 flex-1 italic">"{item.content}"</p>
+                      <div className="flex items-center justify-between border-t border-white/10 pt-4 shrink-0">
+                         <span className="text-empathon-rust text-xs font-bold">{item.rating} Stars</span>
+                         <div className="flex gap-2">
+                            <button onClick={() => handleEdit(item)} className="text-slate-400 hover:text-white text-xs px-2 py-1 rounded hover:bg-white/5">Edit</button>
+                            <button onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300 text-xs px-2 py-1 rounded hover:bg-red-500/10">Delete</button>
+                         </div>
                       </div>
                     </div>
-                  </>
-                ) : (
-                  <div className="p-6 flex flex-col h-full">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-full bg-white/10 overflow-hidden">
-                         {item.avatar_url ? <img src={item.avatar_url} className="w-full h-full object-cover" /> : <div className="w-full h-full bg-slate-700"></div>}
-                      </div>
-                      <div>
-                        <h4 className="text-white font-bold text-sm">{item.client_name}</h4>
-                        <p className="text-slate-500 text-xs">{item.role}</p>
-                      </div>
-                    </div>
-                    <p className="text-slate-300 text-sm mb-4 flex-1 italic">"{item.content}"</p>
-                    <div className="flex items-center justify-between border-t border-white/10 pt-4">
-                       <span className="text-empathon-rust text-xs font-bold">{item.rating} Stars</span>
-                       <div className="flex gap-2">
-                          <button onClick={() => handleEdit(item)} className="text-slate-400 hover:text-white text-xs">Edit</button>
-                          <button onClick={() => handleDelete(item.id)} className="text-red-400 hover:text-red-300 text-xs">Delete</button>
-                       </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))
-          )}
+                  )}
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
     </div>
