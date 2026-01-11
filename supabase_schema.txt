@@ -23,6 +23,15 @@ create table if not exists public.cars (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+-- MIGRATION: Fix for missing 'condition' column in existing 'cars' table
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name = 'cars' AND column_name = 'condition') THEN
+        ALTER TABLE public.cars ADD COLUMN condition text DEFAULT 'Used';
+        ALTER TABLE public.cars ADD CONSTRAINT cars_condition_check CHECK (condition in ('New', 'Used', 'Certified Pre-Owned'));
+    END IF;
+END $$;
+
 -- PREORDERS TABLE
 create table if not exists public.preorders (
   id uuid default uuid_generate_v4() primary key,
@@ -116,21 +125,40 @@ alter table public.testimonials enable row level security;
 alter table public.inquiries enable row level security;
 alter table public.corporate_requests enable row level security;
 
--- Drop existing policies to prevent conflicts if re-running
+-- CLEANUP: Drop existing policies to prevent conflicts
+-- Cars
 drop policy if exists "Public read cars" on public.cars;
 drop policy if exists "Public insert cars" on public.cars;
 drop policy if exists "Public update cars" on public.cars;
 drop policy if exists "Public delete cars" on public.cars;
 
+-- Hero
 drop policy if exists "Public read hero" on public.hero_media;
 drop policy if exists "Public insert hero" on public.hero_media;
 drop policy if exists "Public update hero" on public.hero_media;
 drop policy if exists "Public delete hero" on public.hero_media;
 
+-- Testimonials
 drop policy if exists "Public read testimonials" on public.testimonials;
 drop policy if exists "Public insert testimonials" on public.testimonials;
 drop policy if exists "Public update testimonials" on public.testimonials;
 drop policy if exists "Public delete testimonials" on public.testimonials;
+
+-- CRM Tables (Preorders, Appointments, Inquiries, Corporate)
+drop policy if exists "Public insert preorders" on public.preorders;
+drop policy if exists "Admin read preorders" on public.preorders;
+
+drop policy if exists "Public insert appointments" on public.appointments;
+drop policy if exists "Admin read appointments" on public.appointments;
+
+drop policy if exists "Public insert inquiries" on public.inquiries;
+drop policy if exists "Admin read inquiries" on public.inquiries;
+
+drop policy if exists "Public insert corporate" on public.corporate_requests;
+drop policy if exists "Admin read corporate" on public.corporate_requests;
+
+
+-- RE-CREATE POLICIES
 
 -- READ POLICIES (Public can view content)
 create policy "Public read cars" on public.cars for select to anon using (true);
@@ -138,7 +166,6 @@ create policy "Public read hero" on public.hero_media for select to anon using (
 create policy "Public read testimonials" on public.testimonials for select to anon using (true);
 
 -- WRITE POLICIES (Allow Admin/Anon to edit content for this demo)
--- Note: In a real app, 'to anon' should be replaced with 'to authenticated' and check admin roles.
 
 -- Cars
 create policy "Public insert cars" on public.cars for insert to anon with check (true);
@@ -155,9 +182,9 @@ create policy "Public insert testimonials" on public.testimonials for insert to 
 create policy "Public update testimonials" on public.testimonials for update to anon using (true);
 create policy "Public delete testimonials" on public.testimonials for delete to anon using (true);
 
--- CRM Data (Insert Only for Public, Read for Admin would need Auth, here we allow all for demo)
+-- CRM Data
 create policy "Public insert preorders" on public.preorders for insert to anon with check (true);
-create policy "Admin read preorders" on public.preorders for select to anon using (true); -- Demo mode: allows fetching on CRM page
+create policy "Admin read preorders" on public.preorders for select to anon using (true);
 
 create policy "Public insert appointments" on public.appointments for insert to anon with check (true);
 create policy "Admin read appointments" on public.appointments for select to anon using (true);
@@ -176,21 +203,11 @@ insert into storage.buckets (id, name, public)
 values ('media', 'media', true)
 on conflict (id) do nothing;
 
--- Storage Policies
+-- Drop existing storage policies to ensure clean state
 drop policy if exists "Public Access" on storage.objects;
 drop policy if exists "Public Upload" on storage.objects;
 drop policy if exists "Public Update" on storage.objects;
 
-create policy "Public Access"
-  on storage.objects for select
-  using ( bucket_id = 'media' );
-
-create policy "Public Upload"
-  on storage.objects for insert
-  to anon
-  with check ( bucket_id = 'media' );
-
-create policy "Public Update"
-  on storage.objects for update
-  to anon
-  using ( bucket_id = 'media' );
+create policy "Public Access" on storage.objects for select using ( bucket_id = 'media' );
+create policy "Public Upload" on storage.objects for insert to anon with check ( bucket_id = 'media' );
+create policy "Public Update" on storage.objects for update to anon using ( bucket_id = 'media' );
